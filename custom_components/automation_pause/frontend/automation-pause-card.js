@@ -292,7 +292,7 @@ var Y2=Object.defineProperty;var X2=Object.getOwnPropertyDescriptor;var o=(L,H,C
         @change=${this._handleChoice}
       />
       <span>${V}</span>
-    </label>`}_handleChoice(C){this._choice=C.target.value,this._choice==="custom"&&this.updateComplete.then(()=>this._customInput?.focus())}_handleCustomValue(C){this._customValue=C.target.value}_handleCustomUnit(C){this._customUnit=C.target.value}_handleCustomKey(C){C.key==="Enter"&&this._submit()}_submit(){let C=this._result()?.duration;!this.item||!C||this.busy||k(this,"pause-submit",{entityId:this.item.entity_id,duration:C})}_resume(){!this.item||this.busy||k(this,"resume-submit",{entityId:this.item.entity_id})}_close(){this._dialog.close()}_handleDialogClick(C){C.target===this._dialog&&this._dialog.close()}_handleClose(){this.open&&k(this,"dialog-closed",void 0)}};s.styles=[w,Y,Q2,O1,S`
+    </label>`}_handleChoice(C){this._choice=C.target.value,this._choice==="custom"&&this.updateComplete.then(()=>this._customInput?.focus())}_handleCustomValue(C){this._customValue=C.target.value}_handleCustomUnit(C){this._customUnit=C.target.value}_handleCustomKey(C){C.key==="Enter"&&this._submit()}_submit(){let C=this._result()?.duration;!this.item||!C||this.busy||k(this,"automation-pause-pause-submit",{entityId:this.item.entity_id,duration:C})}_resume(){!this.item||this.busy||k(this,"automation-pause-resume-submit",{entityId:this.item.entity_id})}_close(){this._dialog.close()}_handleDialogClick(C){C.target===this._dialog&&this._dialog.close()}_handleClose(){this.open&&k(this,"automation-pause-dialog-closed",void 0)}};s.styles=[w,Y,Q2,O1,S`
       dialog {
         box-sizing: border-box;
         width: min(var(--ha-dialog-width-md, 580px), 95vw);
@@ -493,7 +493,7 @@ var Y2=Object.defineProperty;var X2=Object.getOwnPropertyDescriptor;var o=(L,H,C
             </button>
           `)}
       </div>
-    `}updated(C){if(!C.has("open"))return;let V=this._menu;this.open&&!V.matches(":popover-open")?(V.showPopover(),this._position(),V.querySelector("button:not([disabled])")?.focus()):!this.open&&V.matches(":popover-open")&&V.hidePopover()}_position(){let C=this.anchor,V=this._menu;if(!C)return;let M=C.getBoundingClientRect(),r=V.offsetWidth,e=V.offsetHeight,i=window.innerWidth,t=window.innerHeight,p=getComputedStyle(this).direction==="rtl",a=this.align==="end"!==p?M.right-r:M.left;a=Math.max(X,Math.min(a,i-r-X));let v=M.bottom;if(v+e>t-X){let n=M.top-e;v=n>=X?n:Math.max(X,t-e-X)}V.style.left=`${a}px`,V.style.top=`${v}px`}_handleToggle(C){C.newState==="closed"&&(this._closedAt=Date.now(),this.open=!1,k(this,"menu-closed",void 0))}_handleClick(C){let V=C.currentTarget.value;this._menu.hidePopover(),this.anchor?.focus(),k(this,"menu-select",{value:V})}_handleKeyDown(C){if(C.key!=="ArrowDown"&&C.key!=="ArrowUp"){C.key==="Escape"&&this.anchor?.focus();return}C.preventDefault();let V=Array.from(this._menu.querySelectorAll("button:not([disabled])")),M=V.indexOf(this.shadowRoot.activeElement),r=C.key==="ArrowDown"?1:-1;V[(M+r+V.length)%V.length]?.focus()}};B.styles=[w,S`
+    `}updated(C){if(!C.has("open"))return;let V=this._menu;this.open&&!V.matches(":popover-open")?(V.showPopover(),this._position(),V.querySelector("button:not([disabled])")?.focus()):!this.open&&V.matches(":popover-open")&&V.hidePopover()}_position(){let C=this.anchor,V=this._menu;if(!C)return;let M=C.getBoundingClientRect(),r=V.offsetWidth,e=V.offsetHeight,i=window.innerWidth,t=window.innerHeight,p=getComputedStyle(this).direction==="rtl",a=this.align==="end"!==p?M.right-r:M.left;a=Math.max(X,Math.min(a,i-r-X));let v=M.bottom;if(v+e>t-X){let n=M.top-e;v=n>=X?n:Math.max(X,t-e-X)}V.style.left=`${a}px`,V.style.top=`${v}px`}_handleToggle(C){C.newState==="closed"&&(this._closedAt=Date.now(),this.open=!1,k(this,"automation-pause-menu-closed",void 0))}_handleClick(C){let V=C.currentTarget.value;this._menu.hidePopover(),this.anchor?.focus(),k(this,"automation-pause-menu-select",{value:V})}_handleKeyDown(C){if(C.key!=="ArrowDown"&&C.key!=="ArrowUp"){C.key==="Escape"&&this.anchor?.focus();return}C.preventDefault();let V=Array.from(this._menu.querySelectorAll("button:not([disabled])")),M=V.indexOf(this.shadowRoot.activeElement),r=C.key==="ArrowDown"?1:-1;V[(M+r+V.length)%V.length]?.focus()}};B.styles=[w,S`
       .menu {
         position: fixed;
         inset: auto;
@@ -615,8 +615,8 @@ var Y2=Object.defineProperty;var X2=Object.getOwnPropertyDescriptor;var o=(L,H,C
                 .anchor=${this._menuButton}
                 .open=${this._menuOpen}
                 .label=${V.overflow_menu}
-                @menu-select=${this._handleMenuSelect}
-                @menu-closed=${this._handleMenuClosed}
+                @automation-pause-menu-select=${this._handleMenuSelect}
+                @automation-pause-menu-closed=${this._handleMenuClosed}
               ></automation-pause-menu>`:d}
       </div>
     `}_renderIcon(){let C=this.item,V=d,M="";return C.pause?(M="disabled",V=this._badge(u2,"badge-paused")):C.state==="off"?(M="disabled",V=this._badge(d2,"badge-off")):C.state!=="on"&&(M="error",V=this._badge(n2,"badge-error")),A`<div class="state-icon ${M}">
@@ -639,7 +639,7 @@ var Y2=Object.defineProperty;var X2=Object.getOwnPropertyDescriptor;var o=(L,H,C
       @click=${this._handleSwitchClick}
     >
       <span class="track"><span class="thumb"></span></span>
-    </button>`}_menuItems(){let C=this.item,V=this.strings,M=z(C),r=[{value:"info",label:V.menu_info,icon:v2},{value:"settings",label:V.menu_settings,icon:p2},{value:"run",label:V.menu_run,icon:S2},{value:"trace",label:V.menu_trace,icon:k2,disabled:!C.config_id,secondary:C.config_id?void 0:V.block_short_no_id},{value:"edit",label:V.menu_edit,icon:s2,divider:!0}];return!C.pause&&(C.state==="on"||C.state==="off")&&r.push({value:"toggle",label:C.state==="off"?V.menu_enable:V.menu_disable,icon:C.state==="off"?g2:f2}),C.pause?r.push({value:"extend",label:V.menu_extend,icon:O2,divider:!0},{value:"resume",label:V.menu_resume,icon:h2}):r.push({value:"pause",label:V.menu_pause,icon:_1,divider:!0,dimmed:M!==void 0,secondary:M?V[`block_short_${M}`]:void 0}),r}_fire(C){k(this,"row-action",{action:C,entityId:this.item.entity_id})}_handleSwitchClick(){this._fire("toggle")}_handleChipClick(){this._fire("open")}_toggleMenu(){this._menu?.justClosed()||(this._menuUsed=!0,this._menuOpen=!this._menuOpen)}_handleMenuSelect(C){C.stopPropagation(),this._fire(C.detail.value)}_handleMenuClosed(C){C.stopPropagation(),this._menuOpen=!1}};g.styles=[w,Y,h1,S`
+    </button>`}_menuItems(){let C=this.item,V=this.strings,M=z(C),r=[{value:"info",label:V.menu_info,icon:v2},{value:"settings",label:V.menu_settings,icon:p2},{value:"run",label:V.menu_run,icon:S2},{value:"trace",label:V.menu_trace,icon:k2,disabled:!C.config_id,secondary:C.config_id?void 0:V.block_short_no_id},{value:"edit",label:V.menu_edit,icon:s2,divider:!0}];return!C.pause&&(C.state==="on"||C.state==="off")&&r.push({value:"toggle",label:C.state==="off"?V.menu_enable:V.menu_disable,icon:C.state==="off"?g2:f2}),C.pause?r.push({value:"extend",label:V.menu_extend,icon:O2,divider:!0},{value:"resume",label:V.menu_resume,icon:h2}):r.push({value:"pause",label:V.menu_pause,icon:_1,divider:!0,dimmed:M!==void 0,secondary:M?V[`block_short_${M}`]:void 0}),r}_fire(C){k(this,"automation-pause-row-action",{action:C,entityId:this.item.entity_id})}_handleSwitchClick(){this._fire("toggle")}_handleChipClick(){this._fire("open")}_toggleMenu(){this._menu?.justClosed()||(this._menuUsed=!0,this._menuOpen=!this._menuOpen)}_handleMenuSelect(C){C.stopPropagation(),this._fire(C.detail.value)}_handleMenuClosed(C){C.stopPropagation(),this._menuOpen=!1}};g.styles=[w,Y,h1,S`
       :host {
         display: grid;
         grid-template-columns: var(--automation-pause-columns);
@@ -867,8 +867,8 @@ var Y2=Object.defineProperty;var X2=Object.getOwnPropertyDescriptor;var o=(L,H,C
         .open=${this._openMenu!==void 0}
         .align=${this._openMenu==="filter"?"start":"end"}
         .label=${this._openMenu==="filter"?C.filters:this._sortLabel()}
-        @menu-select=${this._handleMenuSelect}
-        @menu-closed=${this._handleMenuClosed}
+        @automation-pause-menu-select=${this._handleMenuSelect}
+        @automation-pause-menu-closed=${this._handleMenuClosed}
       ></automation-pause-menu>
     `}_renderSearch(){let C=y(this.items.length===1?this.strings.search_one:this.strings.search_other,{number:this.items.length});return A`<div class="search">
       ${x(x2)}
@@ -1152,7 +1152,7 @@ var Y2=Object.defineProperty;var X2=Object.getOwnPropertyDescriptor;var o=(L,H,C
         .language=${V}
         .now=${this._now}
         .dateOptions=${e}
-        @row-action=${this._handleRowAction}
+        @automation-pause-row-action=${this._handleRowAction}
       ></automation-pause-list>
       <automation-pause-dialog
         .open=${i!==void 0}
@@ -1163,9 +1163,9 @@ var Y2=Object.defineProperty;var X2=Object.getOwnPropertyDescriptor;var o=(L,H,C
         .dateOptions=${e}
         .busy=${this._dialogBusy}
         .error=${this._dialogError}
-        @pause-submit=${this._handlePause}
-        @resume-submit=${this._handleResume}
-        @dialog-closed=${this._closeDialog}
+        @automation-pause-pause-submit=${this._handlePause}
+        @automation-pause-resume-submit=${this._handleResume}
+        @automation-pause-dialog-closed=${this._closeDialog}
       ></automation-pause-dialog>
     `}_openDialog(C){this._dialogError="",this._dialogBusy=!1,this._dialogEntityId=C}_closeDialog(){this._dialogEntityId=void 0,this._dialogError="",this._dialogBusy=!1}_handleRowAction(C){let V=this.hass,M=this._items.find(e=>e.entity_id===C.detail.entityId);if(!V||!M)return;let r=M.entity_id;switch(C.detail.action){case"open":case"pause":case"extend":this._openDialog(r);break;case"resume":V.callService(S1,"resume",{},{entity_id:r}).catch(()=>{});break;case"toggle":V.callService("automation",M.state==="off"?"turn_on":"turn_off",{},{entity_id:r}).catch(()=>{});break;case"run":V.callService("automation","trigger",{skip_condition:!0},{entity_id:r}).catch(()=>{});break;case"info":k(this,"hass-more-info",{entityId:r});break;case"settings":k(this,"hass-more-info",{entityId:r,view:"settings"});break;case"trace":M.config_id&&j2(`/config/automation/trace/${encodeURIComponent(M.config_id)}`);break;case"edit":j2(M.config_id?`/config/automation/edit/${encodeURIComponent(M.config_id)}`:`/config/automation/show/${encodeURIComponent(r)}`);break}}async _handlePause(C){let V=this._items.find(M=>M.entity_id===C.detail.entityId);!this.hass||!V||z(V)||await this._callFromDialog("pause",{duration:C.detail.duration,stop_actions:!0})}async _handleResume(C){C.detail.entityId===this._dialogEntityId&&await this._callFromDialog("resume",{})}async _callFromDialog(C,V){let M=this.hass,r=this._dialogEntityId;if(!(!M||!r)){this._dialogBusy=!0,this._dialogError="";try{await M.callService(S1,C,V,{entity_id:r},!1),this._dialogEntityId===r&&this._closeDialog()}catch(e){this._dialogEntityId===r&&(this._dialogBusy=!1,this._dialogError=G2(e,s1(M.language??M.locale?.language)))}}}};P.styles=[w,O1,S`
       :host {

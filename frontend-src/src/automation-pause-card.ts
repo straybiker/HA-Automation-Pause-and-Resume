@@ -181,7 +181,7 @@ export class AutomationPauseCard extends LitElement {
         .language=${language}
         .now=${this._now}
         .dateOptions=${dateOptions}
-        @row-action=${this._handleRowAction}
+        @automation-pause-row-action=${this._handleRowAction}
       ></automation-pause-list>
       <automation-pause-dialog
         .open=${dialogItem !== undefined}
@@ -192,9 +192,9 @@ export class AutomationPauseCard extends LitElement {
         .dateOptions=${dateOptions}
         .busy=${this._dialogBusy}
         .error=${this._dialogError}
-        @pause-submit=${this._handlePause}
-        @resume-submit=${this._handleResume}
-        @dialog-closed=${this._closeDialog}
+        @automation-pause-pause-submit=${this._handlePause}
+        @automation-pause-resume-submit=${this._handleResume}
+        @automation-pause-dialog-closed=${this._closeDialog}
       ></automation-pause-dialog>
     `;
   }

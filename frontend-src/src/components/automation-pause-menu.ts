@@ -151,7 +151,7 @@ export class AutomationPauseMenu extends LitElement {
     if ((ev as ToggleEvent).newState === "closed") {
       this._closedAt = Date.now();
       this.open = false;
-      fireEvent(this, "menu-closed", undefined);
+      fireEvent(this, "automation-pause-menu-closed", undefined);
     }
   }
 
@@ -159,7 +159,9 @@ export class AutomationPauseMenu extends LitElement {
     const value = (ev.currentTarget as HTMLButtonElement).value;
     this._menu.hidePopover();
     this.anchor?.focus();
-    fireEvent<MenuSelectDetail>(this, "menu-select", { value });
+    fireEvent<MenuSelectDetail>(this, "automation-pause-menu-select", {
+      value,
+    });
   }
 
   private _handleKeyDown(ev: KeyboardEvent): void {

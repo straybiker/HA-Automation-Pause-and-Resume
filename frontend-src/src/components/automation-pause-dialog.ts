@@ -293,7 +293,7 @@ export class AutomationPauseDialog extends LitElement {
     if (!this.item || !duration || this.busy) {
       return;
     }
-    fireEvent<PauseSubmitDetail>(this, "pause-submit", {
+    fireEvent<PauseSubmitDetail>(this, "automation-pause-pause-submit", {
       entityId: this.item.entity_id,
       duration,
     });
@@ -303,7 +303,7 @@ export class AutomationPauseDialog extends LitElement {
     if (!this.item || this.busy) {
       return;
     }
-    fireEvent<ResumeSubmitDetail>(this, "resume-submit", {
+    fireEvent<ResumeSubmitDetail>(this, "automation-pause-resume-submit", {
       entityId: this.item.entity_id,
     });
   }
@@ -321,7 +321,7 @@ export class AutomationPauseDialog extends LitElement {
 
   private _handleClose(): void {
     if (this.open) {
-      fireEvent(this, "dialog-closed", undefined);
+      fireEvent(this, "automation-pause-dialog-closed", undefined);
     }
   }
 

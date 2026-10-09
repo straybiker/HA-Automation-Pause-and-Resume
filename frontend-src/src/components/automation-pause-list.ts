@@ -175,8 +175,8 @@ export class AutomationPauseList extends LitElement {
         .label=${
           this._openMenu === "filter" ? strings.filters : this._sortLabel()
         }
-        @menu-select=${this._handleMenuSelect}
-        @menu-closed=${this._handleMenuClosed}
+        @automation-pause-menu-select=${this._handleMenuSelect}
+        @automation-pause-menu-closed=${this._handleMenuClosed}
       ></automation-pause-menu>
     `;
   }

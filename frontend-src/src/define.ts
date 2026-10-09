@@ -10,7 +10,13 @@ export const define = (
   }
 };
 
-/** Fires a bubbling, composed event, like HA's fireEvent. */
+/**
+ * Fires a bubbling, composed event, like HA's fireEvent.
+ *
+ * A composed event reaches HA's own listeners on the app root. Internal
+ * events therefore start with "automation-pause-": HA listens for names
+ * such as "dialog-closed" and reads its own detail from them.
+ */
 export const fireEvent = <T>(
   node: EventTarget,
   type: string,

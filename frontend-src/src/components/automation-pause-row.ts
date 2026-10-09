@@ -165,8 +165,8 @@ export class AutomationPauseRow extends LitElement {
                 .anchor=${this._menuButton}
                 .open=${this._menuOpen}
                 .label=${strings.overflow_menu}
-                @menu-select=${this._handleMenuSelect}
-                @menu-closed=${this._handleMenuClosed}
+                @automation-pause-menu-select=${this._handleMenuSelect}
+                @automation-pause-menu-closed=${this._handleMenuClosed}
               ></automation-pause-menu>`
             : nothing
         }
@@ -310,7 +310,7 @@ export class AutomationPauseRow extends LitElement {
   }
 
   private _fire(action: RowAction): void {
-    fireEvent<RowActionDetail>(this, "row-action", {
+    fireEvent<RowActionDetail>(this, "automation-pause-row-action", {
       action,
       entityId: this.item.entity_id,
     });
