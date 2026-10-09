@@ -1,0 +1,95 @@
+{
+  "runs": [
+    {
+      "release": "0.1.0-beta.1",
+      "home_assistant": "2026.9.1",
+      "date": "09/10/2026",
+      "steps": [
+        {
+          "step": "1",
+          "check": "The dashboard is in the sidebar. Its list matches Settings → Automations side by side, in the light and the dark theme.",
+          "result": "open",
+          "note": ""
+        },
+        {
+          "step": "2",
+          "check": "Pause 15 min from the card: the automation is off, the sensor lists it, the countdown runs.",
+          "result": "pass",
+          "note": ""
+        },
+        {
+          "step": "3",
+          "check": "The end of the timer turns the automation on (reason timer).",
+          "result": "pass",
+          "note": "On time to 10 ms. The logbook stays empty on that system because its recorder excludes the automation domain."
+        },
+        {
+          "step": "4",
+          "check": "Pause again while paused: new end time, the start time stays, one entry.",
+          "result": "pass",
+          "note": ""
+        },
+        {
+          "step": "5",
+          "check": "Resume now turns the automation on at once.",
+          "result": "pass",
+          "note": ""
+        },
+        {
+          "step": "6",
+          "check": "A manual turn-on ends the pause. The old timer does not turn the automation on later.",
+          "result": "pass",
+          "note": ""
+        },
+        {
+          "step": "7",
+          "check": "Restart during a pause: the automation stays off, the countdown continues.",
+          "result": "pass",
+          "note": "The timer fired on time after the restart."
+        },
+        {
+          "step": "8",
+          "check": "The end time passes while Home Assistant is down: the automation resumes at startup.",
+          "result": "pass",
+          "note": "Resumed when startup finished."
+        },
+        {
+          "step": "9",
+          "check": "Reload of a changed automation during a pause: the pause stays.",
+          "result": "pass",
+          "note": ""
+        },
+        {
+          "step": "10",
+          "check": "Automation without id: a clear error, nothing changes.",
+          "result": "pass",
+          "note": "The REST API reports HTTP 500 for a validation error. The websocket path that the card uses returns the translated message."
+        },
+        {
+          "step": "11",
+          "check": "Search narrows the list. Sort by last run puts the newest first. A new automation appears with no configuration.",
+          "result": "open",
+          "note": ""
+        },
+        {
+          "step": "12",
+          "check": "Dashboard edits survive an integration reload. Rebuild the dashboard resets them.",
+          "result": "pass",
+          "note": ""
+        },
+        {
+          "step": "13",
+          "check": "Phone width: no horizontal scroll, the chips are easy to tap.",
+          "result": "open",
+          "note": ""
+        },
+        {
+          "step": "card",
+          "check": "Closing the pause dialog raises no error in Home Assistant.",
+          "result": "fail",
+          "note": "A TypeError in Home Assistant's quick bar: the card's internal event had Home Assistant's name dialog-closed. Fixed in the next release: the card's internal events have the prefix automation-pause-."
+        }
+      ]
+    }
+  ]
+}

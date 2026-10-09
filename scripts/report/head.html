@@ -1,0 +1,114 @@
+<title>Automation Pause Tests</title>
+<style>
+/* One reading column. System fonts only, so the page needs no network. */
+:root {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --sunken: #eceef2;
+  --ink: #1b1f24;
+  --muted: #5b6470;
+  --line: #d6dae0;
+  --accent: #03729c;
+  --pass: #1f7a43;
+  --pass-soft: #dcf1e3;
+  --fail: #b3261e;
+  --fail-soft: #f9dedb;
+  --open: #8a5a00;
+  --open-soft: #f7ead0;
+  --none: #5b6470;
+  --none-soft: #e5e8ec;
+  --font-body: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-data: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111418; --surface: #191d23; --sunken: #0d1013; --ink: #e4e8ed; --muted: #9aa4b0;
+    --line: #2c333c; --accent: #5cc3eb;
+    --pass: #6fd193; --pass-soft: #173624; --fail: #ff8a80; --fail-soft: #44201d;
+    --open: #f0b65a; --open-soft: #3a2b10; --none: #9aa4b0; --none-soft: #242a31;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111418; --surface: #191d23; --sunken: #0d1013; --ink: #e4e8ed; --muted: #9aa4b0;
+  --line: #2c333c; --accent: #5cc3eb;
+  --pass: #6fd193; --pass-soft: #173624; --fail: #ff8a80; --fail-soft: #44201d;
+  --open: #f0b65a; --open-soft: #3a2b10; --none: #9aa4b0; --none-soft: #242a31;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 16px; }
+h1, h2, h3 { margin: 0; line-height: 1.2; text-wrap: balance; }
+h1 { font-size: 1.9rem; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.05rem; margin-top: 12px; }
+p { margin: 0; max-width: 72ch; }
+a { color: var(--accent); }
+code, .params { font-family: var(--font-data); font-size: 0.85em; overflow-wrap: anywhere; }
+.num { font-variant-numeric: tabular-nums; }
+.muted, .note { color: var(--muted); }
+.note { font-size: 0.82rem; }
+.warn { color: var(--open); }
+.eyebrow { text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+
+header.top { padding-block: 28px 8px; display: grid; gap: 10px; }
+.meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; margin: 8px 0 0; }
+.meta div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; min-width: 0; }
+.meta dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.meta dd { margin: 0; overflow-wrap: anywhere; }
+
+nav.sections { position: sticky; top: 0; z-index: 2; background: var(--bg); border-block: 1px solid var(--line); }
+nav.sections .wrap { display: flex; gap: 4px; overflow-x: auto; padding-block: 6px; }
+nav.sections a { color: var(--muted); text-decoration: none; padding: 4px 10px; border-radius: 6px; white-space: nowrap; font-weight: 500; }
+nav.sections a:hover, nav.sections a:focus-visible { color: var(--ink); background: var(--sunken); outline: none; }
+
+main { display: grid; gap: 40px; padding-block: 24px 48px; }
+section { display: grid; gap: 14px; scroll-margin-top: 52px; min-width: 0; }
+
+.verdict { font-weight: 600; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); }
+.v-pass { background: var(--pass-soft); color: var(--pass); }
+.v-fail { background: var(--fail-soft); color: var(--fail); }
+
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 1px 9px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; line-height: 1.6; }
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.p-pass { color: var(--pass); background: var(--pass-soft); }
+.p-fail { color: var(--fail); background: var(--fail-soft); }
+.p-open { color: var(--open); background: var(--open-soft); }
+.p-none { color: var(--none); background: var(--none-soft); }
+
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); background: var(--sunken); font-weight: 600; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+td { overflow-wrap: anywhere; }
+
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+details > .scroll { border: 0; border-top: 1px solid var(--line); border-radius: 0 0 8px 8px; }
+summary { cursor: pointer; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+summary .gt { font-weight: 600; }
+summary .sub { flex-basis: 100%; }
+.tests { display: grid; gap: 8px; }
+
+footer { padding-block: 16px 32px; border-top: 1px solid var(--line); }
+
+/* Phone width: stack the table cells, so no table needs a side scroll. */
+@media (max-width: 600px) {
+  h1 { font-size: 1.6rem; }
+  .scroll { overflow-x: visible; }
+  table, tbody, tr, td { display: block; width: 100%; }
+  thead { display: none; }
+  tr { border-bottom: 1px solid var(--line); padding: 6px 0; }
+  tbody tr:last-child { border-bottom: 0; }
+  td { border: 0; padding: 2px 12px; }
+  td[data-label]::before { content: attr(data-label) ": "; color: var(--muted); font-size: 0.78rem; }
+}
+</style>
