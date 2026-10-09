@@ -13,7 +13,7 @@ The repository is public on GitHub (`straybiker/HA-Automation-Pause-and-Resume`)
 - No helper, script or edit per automation. Every automation with an `id:` can be paused.
 - `manager.py` holds all pause rules. It has no card or dashboard code, so the logic can move into the core `automation` integration later.
 - Service fields match `automation.turn_off` (`entity_id`, `stop_actions`) plus `duration`.
-- The card copies the look of Settings → Automations and uses HA CSS variables only. It does not use HA's internal `ha-*` elements.
+- The card copies the look of Settings → Automations and uses HA CSS variables only. It does not use HA's internal `ha-*` elements. One exception: `ha-icon` draws an automation's own icon. HA defines it on every page; without it the row shows the robot.
 - The card reads only `hass.states`, `hass.callService` and public card APIs.
 
 ## Rules

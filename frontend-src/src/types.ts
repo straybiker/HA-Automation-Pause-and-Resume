@@ -13,6 +13,8 @@ export interface HassEntityRegistryDisplayEntry {
   entity_id: string;
   device_id?: string | null;
   area_id?: string | null;
+  /** An icon the user set in the entity settings, such as "mdi:fan". */
+  icon?: string | null;
 }
 
 export interface HassDeviceRegistryEntry {
@@ -68,6 +70,8 @@ export interface AutomationItem {
   entity_id: string;
   name: string;
   area?: string;
+  /** The automation's own icon, such as "mdi:fan". Undefined: the robot. */
+  icon?: string;
   /** ISO time, or undefined when the automation never ran. */
   last_triggered?: string;
   state: string;

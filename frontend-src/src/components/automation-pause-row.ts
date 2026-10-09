@@ -189,8 +189,21 @@ export class AutomationPauseRow extends LitElement {
       badge = this._badge(mdiExclamationThick, "badge-error");
     }
     return html`<div class="state-icon ${color}">
-      ${renderIcon(mdiRobot)}${badge}
+      ${this._renderOwnIcon()}${badge}
     </div>`;
+  }
+
+  /**
+   * The automation's own icon, as in the built-in list. Any "mdi:" name
+   * needs HA's ha-icon element; it is defined on every HA page. Without it,
+   * or without an own icon, the row shows the robot.
+   */
+  private _renderOwnIcon(): TemplateResult {
+    const icon = this.item.icon;
+    if (icon && customElements.get("ha-icon")) {
+      return html`<ha-icon class="own-icon" .icon=${icon}></ha-icon>`;
+    }
+    return renderIcon(mdiRobot);
   }
 
   private _badge(path: string, className: string): TemplateResult {
@@ -456,6 +469,10 @@ export class AutomationPauseRow extends LitElement {
         display: inline-flex;
         width: 24px;
         height: 24px;
+      }
+      .own-icon {
+        --mdc-icon-size: 24px;
+        display: flex;
       }
       .state-icon.disabled {
         color: var(--disabled-color, #bdbdbd);

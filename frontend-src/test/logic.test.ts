@@ -453,7 +453,12 @@ describe("data", () => {
         "automation.two": {
           entity_id: "automation.two",
           state: "off",
-          attributes: { friendly_name: "Two", id: 1002, last_triggered: null },
+          attributes: {
+            friendly_name: "Two",
+            id: 1002,
+            last_triggered: null,
+            icon: "mdi:water",
+          },
         },
         "automation.three": {
           entity_id: "automation.three",
@@ -467,7 +472,11 @@ describe("data", () => {
         },
       },
       entities: {
-        "automation.one": { entity_id: "automation.one", area_id: "kitchen" },
+        "automation.one": {
+          entity_id: "automation.one",
+          area_id: "kitchen",
+          icon: "mdi:fan",
+        },
         "automation.two": {
           entity_id: "automation.two",
           device_id: "device1",
@@ -493,6 +502,7 @@ describe("data", () => {
       {
         entity_id: "automation.one",
         name: "One",
+        icon: "mdi:fan",
         area: "Kitchen",
         last_triggered: "2026-10-09T10:00:00+00:00",
         state: "on",
@@ -502,6 +512,7 @@ describe("data", () => {
       {
         entity_id: "automation.two",
         name: "Two",
+        icon: "mdi:water",
         area: "Garden",
         last_triggered: undefined,
         state: "off",
@@ -514,6 +525,7 @@ describe("data", () => {
       {
         entity_id: "automation.three",
         name: "automation.three",
+        icon: undefined,
         area: undefined,
         last_triggered: undefined,
         state: "on",

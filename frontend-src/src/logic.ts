@@ -65,6 +65,16 @@ const areaOf = (hass: HassData, entityId: string): string | undefined => {
   return areaId ? hass.areas?.[areaId]?.name : undefined;
 };
 
+/** The icon from the entity settings, else an icon attribute, as HA does. */
+const iconOf = (
+  hass: HassData,
+  entityId: string,
+  attribute: unknown
+): string | undefined => {
+  const icon = hass.entities?.[entityId]?.icon || attribute;
+  return typeof icon === "string" && icon ? icon : undefined;
+};
+
 /** Every automation.* entity, with its area and pause. */
 export const buildItems = (
   hass: HassData,
@@ -83,6 +93,7 @@ export const buildItems = (
       entity_id: entityId,
       name: typeof name === "string" && name ? name : entityId,
       area: areaOf(hass, entityId),
+      icon: iconOf(hass, entityId, attributes.icon),
       last_triggered:
         typeof lastTriggered === "string" && lastTriggered
           ? lastTriggered
