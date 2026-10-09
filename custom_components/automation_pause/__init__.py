@@ -9,8 +9,8 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.start import async_at_started
 from homeassistant.helpers.typing import ConfigType
 
-from . import dashboard, frontend, services
-from .const import DOMAIN, LOGGER
+from . import dashboard, frontend, notification, services
+from .const import CONF_NOTIFY_RESUMED, DOMAIN, LOGGER
 from .manager import PauseManager
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
@@ -34,6 +34,10 @@ async def async_setup_entry(
     entry.runtime_data = manager
     entry.async_on_unload(manager.async_stop)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    # Before the startup rules: a pause that ended while Home Assistant was
+    # down also gets its notification.
+    if entry.options.get(CONF_NOTIFY_RESUMED):
+        entry.async_on_unload(notification.async_setup(hass))
     # Timers start once every automation is loaded, so the startup rules
     # see the real state of each paused automation.
     entry.async_on_unload(async_at_started(hass, manager.async_start))

@@ -66,7 +66,11 @@ async def test_options_flow_shows_the_current_choice(
     # An empty answer keeps the dashboard off.
     result = await hass.config_entries.options.async_configure(result["flow_id"], {})
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert entry.options == {"dashboard": False, "dashboard_require_admin": False}
+    assert entry.options == {
+        "dashboard": False,
+        "dashboard_require_admin": False,
+        "notify_resumed": False,
+    }
 
 
 async def test_options_flow_clears_the_name(
@@ -81,10 +85,15 @@ async def test_options_flow_clears_the_name(
         "dashboard": False,
         "dashboard_title": "Pauses",
         "dashboard_require_admin": False,
+        "notify_resumed": False,
     }
     result = await hass.config_entries.options.async_init(entry.entry_id)
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {"dashboard": False}
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert entry.options == {"dashboard": False, "dashboard_require_admin": False}
+    assert entry.options == {
+        "dashboard": False,
+        "dashboard_require_admin": False,
+        "notify_resumed": False,
+    }

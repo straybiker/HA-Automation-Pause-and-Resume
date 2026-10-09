@@ -46,5 +46,8 @@ CONF_DASHBOARD = "dashboard"
 CONF_DASHBOARD_TITLE = "dashboard_title"
 CONF_DASHBOARD_REBUILD = "dashboard_rebuild"
 CONF_DASHBOARD_REQUIRE_ADMIN = "dashboard_require_admin"
+
+# A Home Assistant notification when the timer ends a pause.
+CONF_NOTIFY_RESUMED = "notify_resumed"
 # When the user last rebuilt the dashboard; makes a rebuild change the options.
 CONF_DASHBOARD_REBUILT = "dashboard_rebuilt"

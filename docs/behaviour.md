@@ -157,6 +157,14 @@ When the user removes the integration, it turns on every stored automation that 
 
 Both events show in the logbook of the automation: "paused until 2026-10-09 18:00" (local time) and "resumed (timer)".
 
+## Notification
+
+With the option **Notify when a pause ends**, a Home Assistant notification shows when a pause ends with reason `timer`. That includes an end time that passed while Home Assistant was down.
+
+- Other reasons (`service`, `manual`, `removed`) give no notification. The user caused them, or the automation is gone.
+- One notification per automation. A later end replaces it.
+- `notification.py` listens to `automation_pause_resumed`. `manager.py` does not know about it.
+
 ## Sensor
 
 The sensor **Paused automations** belongs to the service device **Automation Pause and Resume**, one per config entry.

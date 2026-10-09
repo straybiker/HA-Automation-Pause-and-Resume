@@ -20,19 +20,21 @@
   "options": {
     "step": {
       "init": {
-        "title": "Dashboard",
-        "description": "Het dashboard in de zijbalk. Je kunt het bewerken zoals elk ander dashboard.",
+        "title": "Opties",
+        "description": "Het dashboard in de zijbalk, en een melding wanneer een pauze eindigt.",
         "data": {
           "dashboard": "Het dashboard tonen",
           "dashboard_title": "Naam van het dashboard",
           "dashboard_require_admin": "Alleen beheerders",
-          "dashboard_rebuild": "Het dashboard opnieuw opbouwen"
+          "dashboard_rebuild": "Het dashboard opnieuw opbouwen",
+          "notify_resumed": "Melden wanneer een pauze eindigt"
         },
         "data_description": {
           "dashboard": "Uit verwijdert het dashboard en je wijzigingen eraan.",
           "dashboard_title": "De naam in de zijbalk. Een nieuwe naam geldt na het opslaan; de inhoud van het dashboard blijft.",
           "dashboard_require_admin": "Alleen beheerders zien het dashboard in de zijbalk.",
-          "dashboard_rebuild": "Bouwt het dashboard opnieuw op en verwijdert je wijzigingen."
+          "dashboard_rebuild": "Bouwt het dashboard opnieuw op en verwijdert je wijzigingen.",
+          "notify_resumed": "Toont een Home Assistant-melding wanneer de timer een pauze beëindigt en de automatisering weer inschakelt. Zelf hervatten geeft geen melding."
         }
       }
     }

@@ -27,6 +27,7 @@ from .const import (
     CONF_DASHBOARD_REBUILT,
     CONF_DASHBOARD_REQUIRE_ADMIN,
     CONF_DASHBOARD_TITLE,
+    CONF_NOTIFY_RESUMED,
     DOMAIN,
     NAME,
 )
@@ -56,6 +57,10 @@ async def _options_schema(handler: SchemaCommonFlowHandler) -> probatio.Schema:
             ): selector.BooleanSelector(),
             probatio.Required(
                 CONF_DASHBOARD_REBUILD, default=False
+            ): selector.BooleanSelector(),
+            probatio.Required(
+                CONF_NOTIFY_RESUMED,
+                default=bool(handler.options.get(CONF_NOTIFY_RESUMED)),
             ): selector.BooleanSelector(),
         }
     )

@@ -122,6 +122,8 @@ actions:
 
 ### Tell me when a pause ends
 
+For a notification in Home Assistant, turn on **Notify when a pause ends** under Options. For a message on your phone, use an automation on the event:
+
 ```yaml
 alias: Notify when a pause ends
 triggers:
@@ -162,6 +164,7 @@ actions:
 - **Dashboard name**: the name in the sidebar.
 - **Admin only**: only administrators see the dashboard in the sidebar.
 - **Rebuild the dashboard**: discards your edits and builds the dashboard again.
+- **Notify when a pause ends**: a Home Assistant notification (the bell in the sidebar) when the timer ends a pause, also when the end time passed while Home Assistant was down. A resume by you, by an action or with the switch gives no notification. A new end of the same automation replaces its notification.
 
 Change this dashboard here, under **Configure**. The dialog in Settings → Dashboards cannot save it.
 

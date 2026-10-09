@@ -20,19 +20,21 @@
   "options": {
     "step": {
       "init": {
-        "title": "Dashboard",
-        "description": "The dashboard in the sidebar. You can edit it like any other dashboard.",
+        "title": "Options",
+        "description": "The dashboard in the sidebar, and a notification when a pause ends.",
         "data": {
           "dashboard": "Show the dashboard",
           "dashboard_title": "Dashboard name",
           "dashboard_require_admin": "Admin only",
-          "dashboard_rebuild": "Rebuild the dashboard"
+          "dashboard_rebuild": "Rebuild the dashboard",
+          "notify_resumed": "Notify when a pause ends"
         },
         "data_description": {
           "dashboard": "Off removes the dashboard and your edits to it.",
           "dashboard_title": "The name in the sidebar. A new name applies after you save; the dashboard content stays.",
           "dashboard_require_admin": "Only administrators see the dashboard in the sidebar.",
-          "dashboard_rebuild": "Builds the dashboard again and discards your edits."
+          "dashboard_rebuild": "Builds the dashboard again and discards your edits.",
+          "notify_resumed": "Shows a Home Assistant notification when the timer ends a pause and the automation turns on again. A resume by you gives no notification."
         }
       }
     }
