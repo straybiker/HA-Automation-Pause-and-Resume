@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| Integration version | 0.1.0-beta.1 |
-| Commit | `ba079b8` on `main`, with uncommitted changes |
+| Integration version | 0.1.0-beta.2 |
+| Commit | `e5ef42f` on `main` |
 | Date | 09/10/2026 |
 | Results | local Docker run |
 | Supported Home Assistant | 2026.9.0 or later |
@@ -14,18 +14,19 @@ The same report as a page: [test-report.html](test-report.html). GitHub shows th
 
 ## Summary
 
-**3 of 10 checks fail: pytest, oldest supported Home Assistant 2026.9.4, Card: typecheck (tsc), Card: bundle equals a fresh build. Not run: HACS validation.**
+**All 10 checks that ran pass. Not run: HACS validation.**
 
 | Check | Passed | Failed | Skipped | Result | Detail |
 |---|--:|--:|--:|---|---|
-| pytest, newest Home Assistant 2026.10.0 | 81 | 0 | 0 | ✅ pass | requirements-dev.txt: 64 Home Assistant tests, 17 static tests |
-| pytest, oldest supported Home Assistant 2026.9.4 | 80 | 1 | 0 | ❌ fail | requirements-dev-oldest.txt: 64 Home Assistant tests, 17 static tests |
-| Card: vitest | 36 | 0 | 0 | ✅ pass | Node v24.11.1 |
-| Card: typecheck (tsc) | – | – | – | ❌ fail | src/automation-pause-card.ts(17,3): error TS2305: Module '"./logic"' has no exported member 'DEFAULT_ENTITY'. |
+| pytest, newest Home Assistant 2026.10.0 | 108 | 0 | 0 | ✅ pass | requirements-dev.txt: 88 Home Assistant tests, 20 static tests |
+| pytest, oldest supported Home Assistant 2026.9.4 | 108 | 0 | 0 | ✅ pass | requirements-dev-oldest.txt: 88 Home Assistant tests, 20 static tests |
+| Card: vitest | 41 | 0 | 0 | ✅ pass | Node v24.11.1 |
+| Card: typecheck (tsc) | – | – | – | ✅ pass | no type errors |
 | Card: eslint and prettier | – | – | – | ✅ pass | eslint: no problems; prettier: all files formatted |
-| Card: bundle equals a fresh build | – | – | – | ❌ fail | the committed bundle differs from a fresh build; run npm run build |
+| Card: bundle equals a fresh build | – | – | – | ✅ pass | the committed bundle equals a fresh build |
 | ruff check | – | – | – | ✅ pass | All checks passed! |
-| ruff format | – | – | – | ✅ pass | 34 files already formatted |
+| ruff format | – | – | – | ✅ pass | 37 files already formatted |
+| mypy --strict | – | – | – | ✅ pass | Success: no issues found in 11 source files |
 | hassfest | – | – | – | ✅ pass | valid |
 | HACS validation | – | – | – | ➖ not run | not run locally: only CI runs it, in validate.yml |
 
@@ -33,9 +34,11 @@ pytest runs the same suite twice: with the newest Home Assistant (`requirements-
 
 ## Live verification
 
+No live run for 0.1.0-beta.2 yet. This is the newest run, for release 0.1.0-beta.1.
+
 By hand on a live Home Assistant, with the steps in [PLAN.md](PLAN.md#verification-live-ha). The data is in `docs/live-verification.json`.
 
-Release **0.1.0-beta.1** (this release) · Home Assistant 2026.9.1 · 09/10/2026 · 10 pass, 1 fail, 3 open
+Release **0.1.0-beta.1** · Home Assistant 2026.9.1 · 09/10/2026 · 10 pass, 1 fail, 3 open
 
 | Step | Check | Result | Note |
 |---|---|---|---|
@@ -69,7 +72,7 @@ Release **0.1.0-beta.1** (this release) · Home Assistant 2026.9.1 · 09/10/2026
 | An off automation is rejected.<br>*Only an automation that was on can be turned on at the end.* | – | ✅ pass | ✅ pass |
 | An automation without id is rejected. | – | ✅ pass | ✅ pass |
 | A wrong entity is rejected. | automation.test_does_not_exist-not_found | ✅ pass | ✅ pass |
-| A wrong entity is rejected. | sensor.paused_automations-not_automation | ✅ pass | ✅ pass |
+| A wrong entity is rejected. | sensor.automation_pause_and_resume_paused_automations-not_automation | ✅ pass | ✅ pass |
 | An unavailable automation is rejected. | – | ✅ pass | ✅ pass |
 | Duration bounds. | duration0-duration_too_short | ✅ pass | ✅ pass |
 | Duration bounds. | duration1-None | ✅ pass | ✅ pass |
@@ -85,6 +88,10 @@ Release **0.1.0-beta.1** (this release) · Home Assistant 2026.9.1 · 09/10/2026
 | No target is rejected. | – | ✅ pass | ✅ pass |
 | A label targets only its automations.<br>*A label, area or device can hold other entities; they are skipped.* | – | ✅ pass | ✅ pass |
 | An action without a loaded entry is rejected. | – | ✅ pass | ✅ pass |
+| A failed turn on fails the resume and keeps the pause.<br>*The other automations resume; the failed one keeps its pause and timer.* | – | ✅ pass | ✅ pass |
+| The manager checks its own input.<br>*The actions check the target first. The manager checks it again, so it works without them.* | – | ✅ pass | ✅ pass |
+| Bad data gets the normal error.<br>*Home Assistant's own schema error, not an unknown error.* | data0 | ✅ pass | ✅ pass |
+| Bad data gets the normal error.<br>*Home Assistant's own schema error, not an unknown error.* | data1 | ✅ pass | ✅ pass |
 
 ### Changes from outside
 
@@ -102,6 +109,13 @@ Release **0.1.0-beta.1** (this release) · Home Assistant 2026.9.1 · 09/10/2026
 | A turn on after a rename is manual. | – | ✅ pass | ✅ pass |
 | The store survives an entry reload. | – | ✅ pass | ✅ pass |
 | Removing the integration turns paused automations on.<br>*Nothing would turn them on after the integration is gone.* | – | ✅ pass | ✅ pass |
+| A failed turn on at the end keeps the pause.<br>*No caller to tell, so a warning goes to the log. The pause stays, so the automation does not stay off without notice.* | – | ✅ pass | ✅ pass |
+| A failed turn on retries when the automation shows off. | – | ✅ pass | ✅ pass |
+| A gone automation at the end ends the pause.<br>*No state and no registry entry when the timer fires: reason removed.* | – | ✅ pass | ✅ pass |
+| A late end does nothing.<br>*A timer or a second end that comes after the pause has ended, for example while a turn-on was running.* | – | ✅ pass | ✅ pass |
+| Registry changes of other automations do nothing. | – | ✅ pass | ✅ pass |
+| A failed turn off after a rename.<br>*The pause stays. A later turn-on by hand ends it as usual.* | – | ✅ pass | ✅ pass |
+| Removal turns on what it can.<br>*A failed turn-on is logged; the store is deleted all the same. An automation that is not off is left alone.* | – | ✅ pass | ✅ pass |
 
 ### Startup
 
@@ -122,6 +136,8 @@ Release **0.1.0-beta.1** (this release) · Home Assistant 2026.9.1 · 09/10/2026
 |---|---|---|---|
 | The sensor follows every step. | – | ✅ pass | ✅ pass |
 | The sensor entity. | – | ✅ pass | ✅ pass |
+| The sensor belongs to a service device. | – | ✅ pass | ✅ pass |
+| An older install keeps its entity id.<br>*The registry keeps the entity ID that the sensor had before.* | – | ✅ pass | ✅ pass |
 
 ### Diagnostics and logbook
 
@@ -164,6 +180,10 @@ Release **0.1.0-beta.1** (this release) · Home Assistant 2026.9.1 · 09/10/2026
 | A dashboard failure does not stop the entry. | – | ✅ pass | ✅ pass |
 | Edits at startup are not built again. | – | ✅ pass | ✅ pass |
 | Removing the entry deletes the dashboard. | – | ✅ pass | ✅ pass |
+| A used path gets part of the entry id. | – | ✅ pass | ✅ pass |
+| No dashboard without lovelace. | – | ✅ pass | ✅ pass |
+| The dashboard is for everyone by default.<br>*An entry from before the option has no such key: not admin only.* | – | ✅ pass | ✅ pass |
+| Admin only.<br>*The reload after the options flow registers the panel again.* | – | ✅ pass | ✅ pass |
 
 ### Card serving
 
@@ -205,7 +225,31 @@ Release **0.1.0-beta.1** (this release) · Home Assistant 2026.9.1 · 09/10/2026
 | Every language has every key. | nl | ✅ pass | ✅ pass |
 | Placeholders match english.<br>*A missing placeholder shows as raw text in the message.* | en | ✅ pass | ✅ pass |
 | Placeholders match english.<br>*A missing placeholder shows as raw text in the message.* | nl | ✅ pass | ✅ pass |
-| Every exception has text. | – | ✅ pass | ❌ fail: AssertionError: assert {'already_off...omation', ...} <= {'already_off...omation', ...} Extra items in the left set: 'turn_on_failed' |
+| Every exception has text. | – | ✅ pass | ✅ pass |
+
+### tests/ha/test_notification.py
+
+`tests/ha/test_notification.py` · Home Assistant tests
+
+| Test | Case | Newest (2026.10.0) | Oldest (2026.9.4) |
+|---|---|---|---|
+| No notification without the option. | – | ✅ pass | ✅ pass |
+| The timer end shows a notification. | – | ✅ pass | ✅ pass |
+| A second end replaces the notification. | – | ✅ pass | ✅ pass |
+| A resume by the user shows none. | – | ✅ pass | ✅ pass |
+| A manual turn on shows none. | – | ✅ pass | ✅ pass |
+| Unload stops the notifications. | – | ✅ pass | ✅ pass |
+| An automation without a state uses its entity id. | – | ✅ pass | ✅ pass |
+
+### tests/test_quality_scale.py
+
+`tests/test_quality_scale.py` · Static
+
+| Test | Case | Newest (2026.10.0) | Oldest (2026.9.4) |
+|---|---|---|---|
+| Every rule is listed. | – | ✅ pass | ✅ pass |
+| No rule is open. | – | ✅ pass | ✅ pass |
+| Every exemption says why. | – | ✅ pass | ✅ pass |
 
 ## Card (vitest)
 
@@ -251,6 +295,11 @@ Release **0.1.0-beta.1** (this release) · Home Assistant 2026.9.1 · 09/10/2026
 | data | Lists every automation with its area and pause. | ✅ pass |
 | data | Skips bad pause entries. | ✅ pass |
 | data | Explains why an automation cannot be paused. | ✅ pass |
+| sensor | Finds the sensor of a new install by its platform. | ✅ pass |
+| sensor | Finds the entity ID that an older install keeps. | ✅ pass |
+| sensor | Finds a renamed sensor. | ✅ pass |
+| sensor | Uses the card config entity first. | ✅ pass |
+| sensor | Finds nothing without the integration. | ✅ pass |
 | strings | Picks the language and falls back to English. | ✅ pass |
 | strings | Has the same keys in both languages. | ✅ pass |
 | strings | Fills placeholders. | ✅ pass |
