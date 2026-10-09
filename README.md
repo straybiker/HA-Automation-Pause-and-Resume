@@ -24,7 +24,7 @@ Status: beta, in development. The build plan is in [docs/PLAN.md](docs/PLAN.md).
 
 The integration adds the dashboard **Automation Pause and Resume** to the sidebar. It loads its own card, so there is no second HACS download and no manual dashboard resource.
 
-Home Assistant 2026.3 or later.
+Home Assistant 2026.9 or later.
 
 ## Use
 

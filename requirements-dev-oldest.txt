@@ -1,0 +1,6 @@
+# The oldest Home Assistant release the integration supports (see hacs.json).
+# CI runs the Home Assistant tests against this set too, so an API that only
+# newer releases have fails the build.
+pytest-homeassistant-custom-component==0.13.367
+# The pin in that release's frontend manifest.
+home-assistant-frontend==20260826.7

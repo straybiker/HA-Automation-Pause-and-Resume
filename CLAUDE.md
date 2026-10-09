@@ -21,7 +21,7 @@ The repository is public on GitHub (`straybiker/HA-Automation-Pause-and-Resume`)
 - `docs/behaviour.md` is the specification. Change it, `manager.py` and the tests together.
 - Home Assistant code is async. No blocking I/O in the event loop.
 - Keep hassfest and the HACS action green.
-- Python 3.14. Home Assistant 2026.3 or later.
+- Python 3.14. Home Assistant 2026.9 or later (`hacs.json`). CI tests the oldest supported release (`requirements-dev-oldest.txt`) and the newest (`requirements-dev.txt`).
 - Comments explain why. Do not write changelog comments. Git is the changelog.
 - Never commit secrets, tokens, `.env` files or real entity IDs. The repository is public.
 - Before every commit, review the documentation (`README.md`, `CONTRIBUTING.md`, `docs/*.md`, `CLAUDE.md`) against the change and update what is out of date.

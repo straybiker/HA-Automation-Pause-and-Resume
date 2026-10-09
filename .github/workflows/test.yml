@@ -18,8 +18,17 @@ concurrency:
 
 jobs:
   pytest:
-    name: pytest
+    name: pytest (${{ matrix.home-assistant }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The newest release, and the oldest that hacs.json allows.
+        include:
+          - home-assistant: newest
+            requirements: requirements-dev.txt
+          - home-assistant: oldest
+            requirements: requirements-dev-oldest.txt
     steps:
       - uses: actions/checkout@v5
 
@@ -28,12 +37,12 @@ jobs:
           # Home Assistant 2026.3 and later need Python 3.14.
           python-version: "3.14"
           cache: pip
-          cache-dependency-path: requirements-dev.txt
+          cache-dependency-path: ${{ matrix.requirements }}
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          pip install -r ${{ matrix.requirements }}
 
       - name: Run tests
         run: pytest -q

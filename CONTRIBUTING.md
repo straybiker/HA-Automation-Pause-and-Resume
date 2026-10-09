@@ -18,6 +18,8 @@ pip install -r requirements-dev.txt
 pytest -q
 ```
 
+**Oldest supported release:** `requirements-dev-oldest.txt` pins the test harness of the oldest Home Assistant release in `hacs.json`. CI runs the suite with both files. Raise both together.
+
 **Windows:** the Home Assistant test harness needs Linux (it imports `fcntl`). Run the static and translation tests natively; `tests/ha` is skipped there.
 
 ```powershell
