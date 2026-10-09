@@ -1,0 +1,3 @@
+# The card bundle is generated. Keep its bytes exactly as esbuild writes them,
+# so the CI check against a fresh build does not see line-ending changes.
+custom_components/automation_pause/frontend/*.js -text

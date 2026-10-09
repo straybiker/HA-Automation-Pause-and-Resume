@@ -35,8 +35,10 @@ pytest -q                 # Windows: static and translation tests; tests/ha is s
 .\scripts\test-ha.ps1     # full suite in Docker (the HA test harness needs Linux)
 ruff check .
 ruff format --check .
+cd frontend-src; npm ci; npm run typecheck; npm run lint; npm test; npm run build
 ```
 
+- The card bundle `custom_components/automation_pause/frontend/automation-pause-card.js` is committed. Rebuild it with `npm run build` after every change in `frontend-src/` and commit both. CI fails when it is not current.
 - Releases: bump the version in `manifest.json` and `pyproject.toml` together; tag `v<version>`. See CONTRIBUTING.md.
 - Translations: `strings.json` and `translations/en.json` must stay identical; `translations/nl.json` must have the same keys. `tests/test_translations.py` checks both.
 - Run hassfest locally before pushing manifest, strings or icons changes: `docker run --rm -v "<repo>:/github/workspace" ghcr.io/home-assistant/hassfest`.

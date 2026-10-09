@@ -5,6 +5,7 @@ Thank you for your help. Report bugs and ideas as [issues](https://github.com/st
 ## Read first
 
 - [docs/behaviour.md](docs/behaviour.md): the specification of the pause rules.
+- [docs/frontend-strings.md](docs/frontend-strings.md): the card's strings and how its parts map to Home Assistant's own automation list.
 
 ## Development setup
 
@@ -44,6 +45,23 @@ ruff format --check .
 docker run --rm -v "$PWD:/github/workspace" ghcr.io/home-assistant/hassfest
 ```
 
+## Card
+
+The card's source is in `frontend-src/` (TypeScript, Lit, esbuild, vitest). Use the Node version in `frontend-src/.nvmrc`.
+
+```bash
+cd frontend-src
+npm ci
+npm run typecheck
+npm run lint
+npm test
+npm run build
+```
+
+`npm run build` writes `custom_components/automation_pause/frontend/automation-pause-card.js`. Commit that file with the source change: HACS installs it as it is. CI fails when the committed file differs from a fresh build.
+
+The card copies the look of Settings → Automations with Home Assistant's CSS variables. It does not use Home Assistant's internal `ha-*` elements.
+
 ## Rules
 
 - **The rules live in `manager.py`.** It has no card or dashboard code.
@@ -64,5 +82,5 @@ For a test version, use a SemVer pre-release version such as `0.1.0-beta.1` and 
 ## Pull requests
 
 - Branch from `main`.
-- CI runs pytest, ruff, hassfest and the HACS validation. All must pass.
+- CI runs pytest, ruff, the card checks, hassfest and the HACS validation. All must pass.
 - Keep a pull request to one subject.
