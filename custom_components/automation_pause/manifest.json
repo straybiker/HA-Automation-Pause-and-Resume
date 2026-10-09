@@ -1,0 +1,15 @@
+{
+  "domain": "automation_pause",
+  "name": "Automation Pause and Resume",
+  "after_dependencies": ["lovelace"],
+  "codeowners": ["@straybiker"],
+  "config_flow": true,
+  "dependencies": ["automation", "frontend", "http"],
+  "documentation": "https://github.com/straybiker/HA-Automation-Pause-and-Resume",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/straybiker/HA-Automation-Pause-and-Resume/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0-beta.1"
+}

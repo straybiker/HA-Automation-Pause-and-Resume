@@ -1,0 +1,9 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Pause any automation for a set time. It turns on again by itself."
+      }
+    }
+  }
+}

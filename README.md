@@ -2,7 +2,7 @@
 
 Pause any Home Assistant automation for a set time. It turns on again by itself.
 
-Status: planning. The build plan is in [docs/PLAN.md](docs/PLAN.md).
+Status: in development. The build plan is in [docs/PLAN.md](docs/PLAN.md).
 
 ## Planned features
 

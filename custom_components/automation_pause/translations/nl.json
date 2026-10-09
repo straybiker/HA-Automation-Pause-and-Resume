@@ -1,0 +1,9 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Pauzeer een automatisering voor een bepaalde tijd. Ze schakelt daarna vanzelf weer in."
+      }
+    }
+  }
+}

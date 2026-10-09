@@ -1,0 +1,14 @@
+# Development and CI dependencies (Linux).
+#
+# The integration has no runtime requirements (see
+# custom_components/automation_pause/manifest.json). This file is only for
+# running tests and linting.
+#
+# pytest-homeassistant-custom-component pins one exact Home Assistant
+# version. Bump it when a new Home Assistant release is out, so CI catches
+# API drift. It does not run on Windows (it needs fcntl): on Windows use
+# requirements-dev-windows.txt for the static tests and run the Home
+# Assistant tests in Docker (scripts/test-ha.ps1) or CI.
+pytest-homeassistant-custom-component==0.13.371
+# Keep in step with the ruff version in .github/workflows/test.yml.
+ruff==0.16.10
