@@ -25,11 +25,13 @@
         "data": {
           "dashboard": "Het dashboard tonen",
           "dashboard_title": "Naam van het dashboard",
+          "dashboard_require_admin": "Alleen beheerders",
           "dashboard_rebuild": "Het dashboard opnieuw opbouwen"
         },
         "data_description": {
           "dashboard": "Uit verwijdert het dashboard en je wijzigingen eraan.",
           "dashboard_title": "De naam in de zijbalk. Een nieuwe naam geldt na het opslaan; de inhoud van het dashboard blijft.",
+          "dashboard_require_admin": "Alleen beheerders zien het dashboard in de zijbalk.",
           "dashboard_rebuild": "Bouwt het dashboard opnieuw op en verwijdert je wijzigingen."
         }
       }
@@ -77,6 +79,9 @@
     },
     "duration_too_long": {
       "message": "Een pauze duurt hoogstens 365 dagen."
+    },
+    "turn_on_failed": {
+      "message": "{entity_id} kon niet worden ingeschakeld. De pauze blijft."
     }
   },
   "services": {

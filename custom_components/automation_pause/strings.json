@@ -25,11 +25,13 @@
         "data": {
           "dashboard": "Show the dashboard",
           "dashboard_title": "Dashboard name",
+          "dashboard_require_admin": "Admin only",
           "dashboard_rebuild": "Rebuild the dashboard"
         },
         "data_description": {
           "dashboard": "Off removes the dashboard and your edits to it.",
           "dashboard_title": "The name in the sidebar. A new name applies after you save; the dashboard content stays.",
+          "dashboard_require_admin": "Only administrators see the dashboard in the sidebar.",
           "dashboard_rebuild": "Builds the dashboard again and discards your edits."
         }
       }
@@ -77,6 +79,9 @@
     },
     "duration_too_long": {
       "message": "A pause can be at most 365 days."
+    },
+    "turn_on_failed": {
+      "message": "{entity_id} could not be turned on. The pause stays."
     }
   },
   "services": {

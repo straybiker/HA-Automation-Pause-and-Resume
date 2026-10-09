@@ -74,3 +74,8 @@ async def test_logbook_text(hass: HomeAssistant, automations) -> None:
         "message": "resumed (timer)",
         "entity_id": KITCHEN,
     }
+    # An automation without a state shows its entity ID.
+    gone = described[EVENT_PAUSE_RESUMED](
+        SimpleNamespace(data={"entity_id": "automation.test_gone", "reason": "removed"})
+    )
+    assert gone["name"] == "automation.test_gone"

@@ -263,15 +263,31 @@ class PauseManager:
     async def async_resume(
         self, entity_ids: list[str], *, context: Context | None = None
     ) -> None:
-        """End the pauses now. All or nothing."""
+        """End the pauses now.
+
+        The checks are all or nothing. A failed turn-on keeps that pause and
+        fails the call after the other automations are resumed.
+        """
         entity_ids = list(dict.fromkeys(entity_ids))
         if not entity_ids:
             raise _invalid(translation_key="no_entities")
         for entity_id in entity_ids:
             if entity_id not in self._pauses:
                 raise _invalid(translation_key="not_paused", entity_id=entity_id)
+        failed: list[str] = []
+        error: HomeAssistantError | None = None
         for entity_id in entity_ids:
-            await self._async_end(entity_id, REASON_SERVICE, context)
+            try:
+                await self._async_end(entity_id, REASON_SERVICE, context)
+            except HomeAssistantError as err:
+                failed.append(entity_id)
+                error = err
+        if failed:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="turn_on_failed",
+                translation_placeholders={"entity_id": ", ".join(failed)},
+            ) from error
 
     @staticmethod
     async def async_remove(hass: HomeAssistant) -> None:
@@ -393,14 +409,17 @@ class PauseManager:
     async def _async_end(
         self, entity_id: str, reason: str, context: Context | None = None
     ) -> None:
-        """End a pause. A timer or service end turns the automation on."""
-        if self._drop(entity_id) is None:
-            return
-        await self._async_save()
+        """End a pause. A timer or service end turns the automation on first.
+
+        A failed turn-on keeps the pause, so the automation does not stay off
+        without notice. The resume action gets the error; a timer or startup
+        end has no caller, so it logs a warning.
+        """
         own = self._own_context(context)
         state = self.hass.states.get(entity_id)
         if (
-            reason in (REASON_TIMER, REASON_SERVICE)
+            entity_id in self._pauses
+            and reason in (REASON_TIMER, REASON_SERVICE)
             and state is not None
             and state.state == STATE_OFF
         ):
@@ -413,7 +432,16 @@ class PauseManager:
                     context=own,
                 )
             except HomeAssistantError:
-                LOGGER.warning("Could not turn %s on", entity_id, exc_info=True)
+                if reason == REASON_SERVICE:
+                    raise
+                LOGGER.warning(
+                    "Could not turn %s on. The pause stays", entity_id, exc_info=True
+                )
+                return
+        # Another end may have finished during the turn-on.
+        if self._drop(entity_id) is None:
+            return
+        await self._async_save()
         self._fire_resumed(entity_id, reason, own)
 
     async def _async_timer_fired(self, entity_id: str, _now: datetime) -> None:
@@ -439,11 +467,13 @@ class PauseManager:
     def _async_state_changed(self, event: Event[EventStateChangedData]) -> None:
         entity_id = event.data["entity_id"]
         new_state = event.data["new_state"]
-        if (pause := self._pauses.get(entity_id)) is None:
-            return
         # A reload makes the state unavailable for a moment; a rename
         # removes it. The pause must survive both.
-        if new_state is None or new_state.state in _NO_STATE:
+        if (
+            (pause := self._pauses.get(entity_id)) is None
+            or new_state is None
+            or new_state.state in _NO_STATE
+        ):
             return
         if entity_id in self._renamed:
             self._settle_renamed(entity_id)
@@ -472,11 +502,10 @@ class PauseManager:
         state machine, not the event: the events of a rename arrive late.
         """
         state = self.hass.states.get(entity_id)
-        if state is None or state.state in _NO_STATE:
-            return
-        if state.state == STATE_OFF:
+        current = None if state is None else state.state
+        if current == STATE_OFF:
             self._renamed.pop(entity_id, None)
-        elif not self._renamed.get(entity_id):
+        elif current == STATE_ON and not self._renamed.get(entity_id):
             self._renamed[entity_id] = True
             self.hass.async_create_task(
                 self._async_turn_off_renamed(entity_id), eager_start=True

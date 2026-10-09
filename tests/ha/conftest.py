@@ -13,6 +13,8 @@ from custom_components.automation_pause.const import DOMAIN
 KITCHEN = "automation.test_kitchen_lights"
 GARDEN = "automation.test_garden_watering"
 NO_ID = "automation.test_no_id"
+# The sensor of a new install: the device name, then the entity name.
+SENSOR = "sensor.automation_pause_and_resume_paused_automations"
 
 
 def _automation(alias: str, automation_id: str | None = None) -> dict:

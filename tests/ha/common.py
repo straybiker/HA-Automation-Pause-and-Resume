@@ -14,11 +14,12 @@ from pytest_homeassistant_custom_component.common import (
 
 from custom_components.automation_pause.const import (
     DOMAIN,
-    SENSOR_ENTITY_ID,
     SERVICE_PAUSE,
     SERVICE_RESUME,
 )
 from custom_components.automation_pause.manager import PauseManager
+
+from .conftest import SENSOR
 
 FIVE_MINUTES = {"minutes": 5}
 
@@ -70,6 +71,6 @@ def state(hass: HomeAssistant, entity_id: str) -> str:
 
 def sensor(hass: HomeAssistant) -> tuple[str, list[str]]:
     """The sensor state and the entity ids in its attribute, in order."""
-    current = hass.states.get(SENSOR_ENTITY_ID)
+    current = hass.states.get(SENSOR)
     assert current is not None
     return current.state, [p["entity_id"] for p in current.attributes["paused"]]

@@ -30,9 +30,8 @@ REASON_SERVICE = "service"
 REASON_MANUAL = "manual"
 REASON_REMOVED = "removed"
 
-# The sensor that lists the pauses. The card reads it by default.
+# The sensor that lists the pauses. The card finds it by its platform.
 SENSOR_KEY = "paused_automations"
-SENSOR_ENTITY_ID = f"sensor.{SENSOR_KEY}"
 ATTR_PAUSED = "paused"
 ATTR_PAUSED_AT = "paused_at"
 ATTR_RESUME_AT = "resume_at"
@@ -46,5 +45,6 @@ CARD_URL_BASE = f"/{DOMAIN}"
 CONF_DASHBOARD = "dashboard"
 CONF_DASHBOARD_TITLE = "dashboard_title"
 CONF_DASHBOARD_REBUILD = "dashboard_rebuild"
+CONF_DASHBOARD_REQUIRE_ADMIN = "dashboard_require_admin"
 # When the user last rebuilt the dashboard; makes a rebuild change the options.
 CONF_DASHBOARD_REBUILT = "dashboard_rebuilt"

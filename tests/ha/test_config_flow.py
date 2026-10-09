@@ -28,6 +28,8 @@ async def test_flow_creates_the_entry_with_the_defaults(
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["title"] == "Automation Pause and Resume"
     assert result["data"] == {}
+    # single_config_entry allows one entry, so it needs no unique ID.
+    assert result["result"].unique_id is None
     # The dashboard is on by default, with the integration name.
     assert result["options"] == {
         "dashboard": True,
@@ -64,7 +66,7 @@ async def test_options_flow_shows_the_current_choice(
     # An empty answer keeps the dashboard off.
     result = await hass.config_entries.options.async_configure(result["flow_id"], {})
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert entry.options == {"dashboard": False}
+    assert entry.options == {"dashboard": False, "dashboard_require_admin": False}
 
 
 async def test_options_flow_clears_the_name(
@@ -75,10 +77,14 @@ async def test_options_flow_clears_the_name(
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {"dashboard": False, "dashboard_title": "Pauses"}
     )
-    assert entry.options == {"dashboard": False, "dashboard_title": "Pauses"}
+    assert entry.options == {
+        "dashboard": False,
+        "dashboard_title": "Pauses",
+        "dashboard_require_admin": False,
+    }
     result = await hass.config_entries.options.async_init(entry.entry_id)
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {"dashboard": False}
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert entry.options == {"dashboard": False}
+    assert entry.options == {"dashboard": False, "dashboard_require_admin": False}

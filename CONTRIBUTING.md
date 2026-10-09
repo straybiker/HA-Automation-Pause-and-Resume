@@ -32,6 +32,7 @@ Run the full suite in Docker. All arguments go to pytest:
 ```powershell
 .\scripts\test-ha.ps1
 .\scripts\test-ha.ps1 tests/ha -x
+.\scripts\test-ha.ps1 -Oldest     # with the oldest supported Home Assistant
 ```
 
 **Lint and format** with the version that CI uses (pinned in the requirements files):
@@ -39,6 +40,12 @@ Run the full suite in Docker. All arguments go to pytest:
 ```bash
 ruff check .
 ruff format --check .
+```
+
+**Strict typing** of the integration. The settings are in `pyproject.toml` (`[tool.mypy]`):
+
+```bash
+mypy
 ```
 
 **hassfest** after a change to the manifest, strings, translations or icons:
@@ -74,10 +81,25 @@ The card copies the look of Settings → Automations with Home Assistant's CSS v
 - **No private data.** The repository is public: no secrets, `.env` files or entity IDs of real devices.
 - **Docs are part of the change.** Before each commit, check `README.md`, `docs/*.md` and `CONTRIBUTING.md` against the change.
 
+## Test report
+
+[docs/test-report.md](docs/test-report.md) and `docs/test-report.html` show the results of one full run for one version. GitHub shows the HTML file as code; open it from a checkout. Each release rebuilds them. `tests/test_report.py` fails when the report does not name the version in `manifest.json`.
+
+```powershell
+python scripts/report/collect.py        # runs every check: pytest (newest and oldest Home Assistant) and ruff in Docker, the card checks, hassfest
+python scripts/report/collect.py --ci   # or: uses the finished CI run of the pushed HEAD (needs gh)
+python scripts/report/build.py          # writes docs/test-report.md and .html
+```
+
+- `collect.py` writes the raw results to `build/report/` (not in git). It does not change tracked files.
+- The HACS validation runs only in CI. A local run shows it as "not run".
+- The live verification comes from `docs/live-verification.json`. Add a run for each release you test on a live Home Assistant: `release`, `home_assistant`, `date` (DD/MM/YYYY) and a `steps` list with `step`, `check`, `result` (`pass`, `fail` or `open`) and `note`. The steps are those in [docs/PLAN.md](docs/PLAN.md#verification-live-ha). The report shows the run for the current release, else the newest run.
+
 ## Releases
 
 1. Set the same version in `custom_components/automation_pause/manifest.json` and `pyproject.toml` (SemVer). `tests/test_manifest.py` checks that they match.
-2. Publish a GitHub release with the tag `v<version>`, for example `v0.1.0`. HACS offers releases as versions; the Release workflow fails when the tag does not match the manifest.
+2. Rebuild and commit the test report (see [Test report](#test-report)).
+3. Publish a GitHub release with the tag `v<version>`, for example `v0.1.0`. HACS offers releases as versions; the Release workflow fails when the tag does not match the manifest.
 
 For a test version, use a SemVer pre-release version such as `0.1.0-beta.1` and mark the GitHub release as a pre-release. HACS offers it only to users who turn on **Show beta versions** for the repository.
 

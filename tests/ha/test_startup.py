@@ -163,6 +163,11 @@ async def test_an_unreadable_stored_pause_is_skipped(
         "data": {
             KITCHEN: {"paused_at": "not a time", "resume_at": "never"},
             GARDEN: {"paused_at": dt_util.utcnow().isoformat()},
+            # The ISO format, but month 13.
+            OVERDUE: {
+                "paused_at": "2026-13-01T00:00:00+00:00",
+                "resume_at": "2026-13-01T01:00:00+00:00",
+            },
         },
     }
     await setup(hass, entry)

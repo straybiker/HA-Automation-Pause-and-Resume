@@ -38,6 +38,8 @@ All times are stored and sent in UTC, as ISO 8601 text.
 
 The integration checks every automation in the call first. If one check fails, the call fails and nothing changes.
 
+A failed turn-on at the end of a pause is not a check. See "The turn-on fails".
+
 ## Pause
 
 ### Checks
@@ -78,9 +80,9 @@ The pauses do not stack.
 
 A pause ends by the timer, by the resume action, or at startup when the end time has passed.
 
-1. Stop the timer.
-2. Remove the pause from the store.
-3. If the automation is `off`, call `automation.turn_on` with our context.
+1. If the automation is `off`, call `automation.turn_on` with our context.
+2. Stop the timer.
+3. Remove the pause from the store.
 4. Fire `automation_pause_resumed`.
 
 Resume of an automation that is not paused fails with `not_paused`.
@@ -92,6 +94,13 @@ Home Assistant cannot turn on an unavailable automation. When it is available ag
 - The pause stays, with its end time in the past. A warning goes to the log.
 - When the automation shows `off` again, the pause ends at once (reason `timer`).
 - The resume action ends the pause at any time.
+
+### The turn-on fails
+
+The pause stays. No event fires. An automation that stays off with no pause would never turn on again, and nobody would see it.
+
+- **Resume action:** the call fails with `turn_on_failed`. This is a `HomeAssistantError`, not a validation error. The end time and the timer do not change. The other automations in the call resume as usual.
+- **Timer or startup:** there is no caller, so a warning goes to the log. The pause waits with its end time in the past, as for an unavailable automation. It ends when the automation shows `off` again, at the next start, by the resume action, or by a manual turn-on.
 
 ## Changes from outside
 
@@ -150,12 +159,12 @@ Both events show in the logbook of the automation: "paused until 2026-10-09 18:0
 
 ## Sensor
 
-`sensor.paused_automations`:
+The sensor **Paused automations** belongs to the service device **Automation Pause and Resume**, one per config entry.
 
 - State: the number of pauses.
 - Attribute `paused`: a list of `{entity_id, paused_at, resume_at}`, the first to end first.
 
-The entity ID is fixed, so the card finds it in every language.
+The entity ID is not fixed. A new install gets `sensor.automation_pause_and_resume_paused_automations` (device name, then entity name). The entity registry keeps the ID of an older install, `sensor.paused_automations`. The card finds the sensor by its platform, `automation_pause`, so every ID works. The card option `entity` overrides this.
 
 ## Diagnostics
 

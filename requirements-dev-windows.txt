@@ -8,3 +8,5 @@ homeassistant==2026.10.0
 pytest>=8
 pytest-asyncio>=0.24
 ruff==0.16.10
+# Keep in step with requirements-dev.txt.
+mypy==2.3.1

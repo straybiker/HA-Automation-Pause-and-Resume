@@ -14,7 +14,6 @@ import type {
   StatusFilter,
 } from "./types";
 
-export const DEFAULT_ENTITY = "sensor.paused_automations";
 export const SERVICE_DOMAIN = "automation_pause";
 
 /** Same bounds as the pause service. */
@@ -50,6 +49,29 @@ export const parsePauses = (value: unknown): Map<string, PauseInfo> => {
     }
   }
   return pauses;
+};
+
+/**
+ * The entity ID of the integration's sensor. The card config "entity" wins.
+ * Otherwise the card takes the sensor that the integration registered, so
+ * the entity ID can be anything: a new install gets one from the device
+ * name, and an older install keeps "sensor.paused_automations".
+ */
+export const findSensor = (
+  hass: Pick<HomeAssistant, "entities">,
+  override?: string
+): string | undefined => {
+  if (override) {
+    return override;
+  }
+  return Object.values(hass.entities ?? {})
+    .flatMap((entry) =>
+      entry?.platform === SERVICE_DOMAIN &&
+      entry.entity_id.startsWith("sensor.")
+        ? [entry.entity_id]
+        : []
+    )
+    .sort()[0];
 };
 
 type HassData = Pick<
@@ -478,7 +500,7 @@ export const durationErrorKey = (error: DurationError): StringKey =>
 // ---------------------------------------------------------------------------
 // Errors
 
-/** The ServiceValidationError keys of the backend (strings.json "exceptions"). */
+/** The exception keys of the backend (strings.json "exceptions"). */
 export const BACKEND_ERROR_KEYS = [
   "not_loaded",
   "no_entities",
@@ -490,6 +512,7 @@ export const BACKEND_ERROR_KEYS = [
   "not_paused",
   "duration_too_short",
   "duration_too_long",
+  "turn_on_failed",
 ] as const;
 
 export type BackendErrorKey = (typeof BACKEND_ERROR_KEYS)[number];

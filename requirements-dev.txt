@@ -16,3 +16,5 @@ pytest-homeassistant-custom-component==0.13.371
 home-assistant-frontend==20260930.2
 # Keep in step with the ruff version in .github/workflows/test.yml.
 ruff==0.16.10
+# Strict typing of the integration (pyproject.toml [tool.mypy]).
+mypy==2.3.1

@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from datetime import timedelta
+from typing import Any
+from unittest.mock import patch
 
 import pytest
+from homeassistant.components.automation import AutomationEntity
 from homeassistant.const import EVENT_CALL_SERVICE, STATE_OFF, STATE_ON
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ServiceValidationError
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import label_registry as lr
 from homeassistant.util import dt as dt_util
@@ -20,14 +23,13 @@ from custom_components.automation_pause.const import (
     DOMAIN,
     EVENT_PAUSE_RESUMED,
     EVENT_PAUSE_STARTED,
-    SENSOR_ENTITY_ID,
     SERVICE_PAUSE,
     SERVICE_RESUME,
     STORE_KEY,
 )
 
 from .common import automation, later, manager, pause, resume, state
-from .conftest import GARDEN, KITCHEN, NO_ID, setup
+from .conftest import GARDEN, KITCHEN, NO_ID, SENSOR, setup
 
 
 async def _error(coro) -> str:
@@ -165,7 +167,7 @@ async def test_an_automation_without_id_is_rejected(
     ("entity_id", "key"),
     [
         ("automation.test_does_not_exist", "not_found"),
-        (SENSOR_ENTITY_ID, "not_automation"),
+        (SENSOR, "not_automation"),
     ],
 )
 async def test_a_wrong_entity_is_rejected(
@@ -238,7 +240,7 @@ async def test_several_automations_in_one_call(
     [
         ([NO_ID], "no_id"),
         (["automation.test_does_not_exist"], "not_found"),
-        ([SENSOR_ENTITY_ID], "not_automation"),
+        ([SENSOR], "not_automation"),
     ],
 )
 async def test_one_bad_entity_pauses_nothing(
@@ -290,7 +292,7 @@ async def test_a_label_targets_only_its_automations(
     label = lr.async_get(hass).async_create("Test pausable")
     registry = er.async_get(hass)
     registry.async_update_entity(GARDEN, labels={label.label_id})
-    registry.async_update_entity(SENSOR_ENTITY_ID, labels={label.label_id})
+    registry.async_update_entity(SENSOR, labels={label.label_id})
 
     await hass.services.async_call(
         DOMAIN,
@@ -318,4 +320,87 @@ async def test_an_action_without_a_loaded_entry_is_rejected(
 
     assert await _error(pause(hass, KITCHEN)) == "not_loaded"
     assert await _error(resume(hass, KITCHEN)) == "not_loaded"
+    assert state(hass, KITCHEN) == STATE_ON
+
+
+async def test_a_failed_turn_on_fails_the_resume_and_keeps_the_pause(
+    hass: HomeAssistant, automations, entry: MockConfigEntry, freezer, hass_storage
+) -> None:
+    """The other automations resume; the failed one keeps its pause and timer."""
+    await setup(hass, entry)
+    resumed = async_capture_events(hass, EVENT_PAUSE_RESUMED)
+    await pause(hass, [KITCHEN, GARDEN])
+    before = manager(entry).paused[KITCHEN]
+    turn_on = AutomationEntity.async_turn_on
+
+    async def fail_for_kitchen(self: AutomationEntity, **kwargs: Any) -> None:
+        if self.entity_id == KITCHEN:
+            raise HomeAssistantError("test failure")
+        await turn_on(self, **kwargs)
+
+    with (
+        patch.object(AutomationEntity, "async_turn_on", fail_for_kitchen),
+        pytest.raises(HomeAssistantError) as err,
+    ):
+        await resume(hass, [KITCHEN, GARDEN])
+    await hass.async_block_till_done()
+
+    # A failure of the action itself, not of the input.
+    assert not isinstance(err.value, ServiceValidationError)
+    assert err.value.translation_domain == DOMAIN
+    assert err.value.translation_key == "turn_on_failed"
+    assert err.value.translation_placeholders == {"entity_id": KITCHEN}
+    assert state(hass, GARDEN) == STATE_ON
+    assert state(hass, KITCHEN) == STATE_OFF
+    assert manager(entry).paused == {KITCHEN: before}
+    assert list(hass_storage[STORE_KEY]["data"]) == [KITCHEN]
+    assert [e.data for e in resumed] == [{"entity_id": GARDEN, "reason": "service"}]
+
+    # The timer still ends the pause.
+    await later(hass, freezer, timedelta(minutes=5))
+    assert state(hass, KITCHEN) == STATE_ON
+    assert resumed[-1].data == {"entity_id": KITCHEN, "reason": "timer"}
+
+
+async def test_the_manager_checks_its_own_input(
+    hass: HomeAssistant, automations, entry: MockConfigEntry
+) -> None:
+    """The actions check the target first. The manager checks it again, so
+    it works without them."""
+    await setup(hass, entry)
+    five = timedelta(minutes=5)
+    assert await _error(manager(entry).async_pause([], five, True)) == "no_entities"
+    assert await _error(manager(entry).async_resume([])) == "no_entities"
+    assert (
+        await _error(manager(entry).async_pause([SENSOR], five, True))
+        == "not_automation"
+    )
+
+
+@pytest.mark.parametrize(
+    "data",
+    [{"duration": "soon"}, {"duration": {"minutes": 5}, "unknown_field": 1}],
+)
+async def test_bad_data_gets_the_normal_error(
+    hass: HomeAssistant,
+    automations,
+    entry: MockConfigEntry,
+    hass_ws_client,
+    data: dict[str, Any],
+) -> None:
+    """Home Assistant's own schema error, not an unknown error."""
+    await setup(hass, entry)
+    client = await hass_ws_client(hass)
+    await client.send_json_auto_id(
+        {
+            "type": "call_service",
+            "domain": DOMAIN,
+            "service": SERVICE_PAUSE,
+            "service_data": data,
+            "target": {"entity_id": KITCHEN},
+        }
+    )
+    msg = await client.receive_json()
+    assert not msg["success"]
+    assert msg["error"]["code"] == "invalid_format"
     assert state(hass, KITCHEN) == STATE_ON

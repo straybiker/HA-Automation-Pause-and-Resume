@@ -18,3 +18,28 @@ line-length = 88
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+# Strict typing, as Home Assistant core checks its strict integrations
+# (core's mypy.ini). Only the integration: the tests use the harness's
+# untyped fixtures.
+[tool.mypy]
+python_version = "3.14"
+files = ["custom_components/automation_pause"]
+strict = true
+local_partial_types = true
+strict_equality = true
+warn_unreachable = true
+disallow_any_generics = true
+enable_error_code = [
+    "deprecated",
+    "explicit-override",
+    "ignore-without-code",
+    "redundant-self",
+    "truthy-iterable",
+]
+
+[[tool.mypy.overrides]]
+# Home Assistant re-exports some names without "as", for example
+# StaticPathConfig in homeassistant.components.http.
+module = "homeassistant.*"
+implicit_reexport = true

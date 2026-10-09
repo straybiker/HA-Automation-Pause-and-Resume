@@ -67,6 +67,7 @@ The card keeps its EN and NL texts in `frontend-src/src/strings.ts`. Where Home 
 | `no_automations` | We couldn't find any automations | `ui.panel.config.automation.picker.no_automations` |
 | `no_match` | No rows matching current filters | `ui.components.data-table.no_match_filter` |
 | `entity_not_found` | Entity not available: {entity} | `ui.panel.lovelace.warning.entity_not_found` |
+| `sensor_not_found` | The sensor of Automation Pause and Resume is not available. … | new (shown when the card finds no sensor of the integration) |
 | `error_unknown` | Unknown error | `ui.common.unknown_error` |
 | `error_<key>` | the backend error texts | `component.automation_pause.exceptions.<key>.message` (backend translations) |
 

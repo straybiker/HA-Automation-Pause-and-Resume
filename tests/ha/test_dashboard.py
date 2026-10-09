@@ -5,6 +5,7 @@ from __future__ import annotations
 from unittest.mock import patch
 
 import pytest
+from homeassistant.components import frontend
 from homeassistant.components.frontend import DATA_PANELS
 from homeassistant.components.lovelace.const import LOVELACE_DATA
 from homeassistant.config_entries import ConfigEntryState
@@ -12,12 +13,13 @@ from homeassistant.const import EVENT_HOMEASSISTANT_STARTED, STATE_OFF
 from homeassistant.core import CoreState, HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.setup import async_setup_component
+from homeassistant.util.hass_dict import HassKey
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.automation_pause import dashboard
-from custom_components.automation_pause.const import DOMAIN, SENSOR_ENTITY_ID
+from custom_components.automation_pause.const import DOMAIN
 
-from .conftest import KITCHEN, make_entry, setup
+from .conftest import KITCHEN, SENSOR, make_entry, setup
 
 # The dashboard with the default name.
 PATH = "automation-pause-and-resume"
@@ -195,7 +197,7 @@ async def test_a_dashboard_failure_does_not_stop_the_entry(
     ):
         await setup(hass, with_dashboard)
     assert with_dashboard.state is ConfigEntryState.LOADED
-    assert hass.states.get(SENSOR_ENTITY_ID) is not None
+    assert hass.states.get(SENSOR) is not None
     await hass.services.async_call(
         DOMAIN,
         "pause",
@@ -228,3 +230,56 @@ async def test_removing_the_entry_deletes_the_dashboard(
     await hass.async_block_till_done()
     assert PATH not in _panels(hass)
     assert await dashboard._store(hass, with_dashboard).async_load() is None
+
+
+async def test_a_used_path_gets_part_of_the_entry_id(
+    hass: HomeAssistant, automations, lovelace, with_dashboard: MockConfigEntry
+) -> None:
+    frontend.async_register_built_in_panel(
+        hass, "lovelace", frontend_url_path=PATH, config={"mode": "storage"}
+    )
+    await setup(hass, with_dashboard)
+    path = f"{PATH}-{with_dashboard.entry_id[-6:].lower()}"
+    assert _panels(hass)[path].sidebar_title == "Automation Pause and Resume"
+    assert (await _config(hass, path))["views"][0]["cards"] == [CARD]
+
+
+async def test_no_dashboard_without_lovelace(
+    hass: HomeAssistant,
+    automations,
+    with_dashboard: MockConfigEntry,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    with patch.object(dashboard, "LOVELACE_DATA", HassKey("test_no_lovelace")):
+        await setup(hass, with_dashboard)
+    assert with_dashboard.state is ConfigEntryState.LOADED
+    assert PATH not in _panels(hass)
+    assert "Dashboards are not loaded" in caplog.text
+
+
+async def test_the_dashboard_is_for_everyone_by_default(
+    hass: HomeAssistant, automations, lovelace, with_dashboard: MockConfigEntry
+) -> None:
+    """An entry from before the option has no such key: not admin only."""
+    assert "dashboard_require_admin" not in with_dashboard.options
+    await setup(hass, with_dashboard)
+    assert _panels(hass)[PATH].require_admin is False
+    board = hass.data[LOVELACE_DATA].dashboards[PATH]
+    assert board.config["require_admin"] is False
+
+
+async def test_admin_only(
+    hass: HomeAssistant, automations, lovelace, with_dashboard: MockConfigEntry
+) -> None:
+    """The reload after the options flow registers the panel again."""
+    await setup(hass, with_dashboard)
+    await _options(
+        hass, with_dashboard, {"dashboard": True, "dashboard_require_admin": True}
+    )
+    assert _panels(hass)[PATH].require_admin is True
+    assert hass.data[LOVELACE_DATA].dashboards[PATH].config["require_admin"] is True
+
+    await _options(
+        hass, with_dashboard, {"dashboard": True, "dashboard_require_admin": False}
+    )
+    assert _panels(hass)[PATH].require_admin is False

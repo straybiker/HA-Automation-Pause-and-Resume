@@ -15,6 +15,8 @@ export interface HassEntityRegistryDisplayEntry {
   area_id?: string | null;
   /** An icon the user set in the entity settings, such as "mdi:fan". */
   icon?: string | null;
+  /** The integration that registered the entity, such as "automation_pause". */
+  platform?: string;
 }
 
 export interface HassDeviceRegistryEntry {
@@ -56,6 +58,7 @@ export interface HomeAssistant {
 
 export interface AutomationPauseCardConfig {
   type: string;
+  /** The sensor to read. Without it, the card finds the integration's sensor. */
   entity?: string;
 }
 

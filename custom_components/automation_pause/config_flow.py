@@ -1,14 +1,14 @@
 """Config and options flow: one entry, with the dashboard as the only choice.
 
 The pauses need no settings. The flow only asks whether to add the sidebar
-dashboard and what to call it. The options flow can change both, and can
-rebuild the dashboard.
+dashboard and what to call it. The options flow can change both, can limit
+the dashboard to administrators, and can rebuild it.
 """
 
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any
+from typing import TYPE_CHECKING, Any, override
 
 import probatio
 from homeassistant.helpers import selector
@@ -25,10 +25,14 @@ from .const import (
     CONF_DASHBOARD,
     CONF_DASHBOARD_REBUILD,
     CONF_DASHBOARD_REBUILT,
+    CONF_DASHBOARD_REQUIRE_ADMIN,
     CONF_DASHBOARD_TITLE,
     DOMAIN,
     NAME,
 )
+
+if TYPE_CHECKING:
+    from . import AutomationPauseConfigEntry
 
 USER_SCHEMA = probatio.Schema(
     {
@@ -46,6 +50,10 @@ async def _options_schema(handler: SchemaCommonFlowHandler) -> probatio.Schema:
                 CONF_DASHBOARD, default=bool(handler.options.get(CONF_DASHBOARD))
             ): selector.BooleanSelector(),
             probatio.Optional(CONF_DASHBOARD_TITLE): selector.TextSelector(),
+            probatio.Required(
+                CONF_DASHBOARD_REQUIRE_ADMIN,
+                default=bool(handler.options.get(CONF_DASHBOARD_REQUIRE_ADMIN)),
+            ): selector.BooleanSelector(),
             probatio.Required(
                 CONF_DASHBOARD_REBUILD, default=False
             ): selector.BooleanSelector(),
@@ -65,7 +73,8 @@ async def _validate_dashboard(
     if user_input.pop(CONF_DASHBOARD_REBUILD, False):
         parent = handler.parent_handler
         if isinstance(parent, SchemaOptionsFlowHandler):
-            await dashboard.async_remove(parent.hass, parent.config_entry)
+            entry: AutomationPauseConfigEntry = parent.config_entry
+            await dashboard.async_remove(parent.hass, entry)
         user_input[CONF_DASHBOARD_REBUILT] = dt_util.utcnow().isoformat()
     return user_input
 
@@ -83,5 +92,6 @@ class AutomationPauseConfigFlow(SchemaConfigFlowHandler, domain=DOMAIN):
     options_flow = OPTIONS_FLOW
     options_flow_reloads = True
 
+    @override
     def async_config_entry_title(self, options: Mapping[str, Any]) -> str:
         return NAME

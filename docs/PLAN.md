@@ -123,7 +123,7 @@ Bus events `automation_pause_started` and `automation_pause_resumed` (data: enti
 
 ### Sensor
 
-`sensor.paused_automations`:
+The sensor **Paused automations**, on the service device **Automation Pause and Resume**:
 - State: count of paused automations.
 - Attribute `paused`: list of `{entity_id, paused_at, resume_at}`.
 
@@ -151,7 +151,7 @@ Look and feel: the card copies the built-in Settings → Automations list (`ha-c
   - Countdown refreshes every 30 s. Service errors show in the dialog.
 - Look: HA CSS variables only (light and dark), Roboto/HA typography, 16 px gutters, 44 px minimum touch targets. Works at phone width.
 - Strings: use HA's own wording where HA has a string ("Search automations", "Last triggered", "Never"). A table in `docs/` maps each string to its `home-assistant/frontend` translation key for the port. EN and NL, chosen by `hass.language`.
-- Config: `entity` (default `sensor.paused_automations`). No visual editor in v1.
+- Config: `entity` (default: the sensor of the integration, found by its platform). No visual editor in v1.
 
 Build and code style:
 - TypeScript (strict) + Lit 3, the stack of `home-assistant/frontend`. ESLint and Prettier config copied from that repo, so ported code passes its lint.

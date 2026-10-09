@@ -75,9 +75,11 @@ const en = {
   no_automations: "We couldn't find any automations",
   no_match: "No rows matching current filters",
   entity_not_found: "Entity not available: {entity}",
+  sensor_not_found:
+    "The sensor of Automation Pause and Resume is not available. Check that the integration is set up.",
   error_unknown: "Unknown error",
 
-  // Texts for the ServiceValidationError keys of the backend (strings.json).
+  // Texts for the exception keys of the backend (strings.json).
   error_not_loaded: "Automation Pause and Resume is not loaded.",
   error_no_entities: "Select at least one automation.",
   error_not_automation: "{entity_id} is not an automation.",
@@ -89,6 +91,7 @@ const en = {
   error_not_paused: "{entity_id} is not paused.",
   error_duration_too_short: "A pause must be at least 1 minute.",
   error_duration_too_long: "A pause can be at most 365 days.",
+  error_turn_on_failed: "{entity_id} could not be turned on. The pause stays.",
 };
 
 export type Strings = typeof en;
@@ -167,6 +170,8 @@ const nl: Strings = {
   no_automations: "We konden geen automatiseringen vinden",
   no_match: "Geen rijen die overeenkomen met de huidige filters",
   entity_not_found: "Entiteit niet beschikbaar: {entity}",
+  sensor_not_found:
+    "De sensor van Automation Pause and Resume is niet beschikbaar. Controleer of de integratie is ingesteld.",
   error_unknown: "Onbekende fout",
 
   error_not_loaded: "Automation Pause and Resume is niet geladen.",
@@ -180,6 +185,8 @@ const nl: Strings = {
   error_not_paused: "{entity_id} is niet gepauzeerd.",
   error_duration_too_short: "Een pauze duurt minstens 1 minuut.",
   error_duration_too_long: "Een pauze duurt hoogstens 365 dagen.",
+  error_turn_on_failed:
+    "{entity_id} kon niet worden ingeschakeld. De pauze blijft.",
 };
 
 const STRINGS: Record<string, Strings> = { en, nl };

@@ -14,7 +14,7 @@ The repository is public on GitHub (`straybiker/HA-Automation-Pause-and-Resume`)
 - `manager.py` holds all pause rules. It has no card or dashboard code, so the logic can move into the core `automation` integration later.
 - Service fields match `automation.turn_off` (`entity_id`, `stop_actions`) plus `duration`.
 - The card copies the look of Settings → Automations and uses HA CSS variables only. It does not use HA's internal `ha-*` elements. One exception: `ha-icon` draws an automation's own icon. HA defines it on every page; without it the row shows the robot.
-- The card reads only `hass.states`, `hass.callService` and public card APIs.
+- The card reads only `hass.states`, `hass.entities` (areas, icons, and the platform that finds the sensor), `hass.callService` and public card APIs.
 
 ## Rules
 
@@ -33,13 +33,16 @@ The repository is public on GitHub (`straybiker/HA-Automation-Pause-and-Resume`)
 ```powershell
 pytest -q                 # Windows: static and translation tests; tests/ha is skipped
 .\scripts\test-ha.ps1     # full suite in Docker (the HA test harness needs Linux)
+.\scripts\test-ha.ps1 -Oldest   # the same with the oldest supported Home Assistant
 ruff check .
 ruff format --check .
+mypy                      # strict typing of the integration (pyproject.toml)
 cd frontend-src; npm ci; npm run typecheck; npm run lint; npm test; npm run build
 ```
 
 - The card bundle `custom_components/automation_pause/frontend/automation-pause-card.js` is committed. Rebuild it with `npm run build` after every change in `frontend-src/` and commit both. CI fails when it is not current.
 - Releases: bump the version in `manifest.json` and `pyproject.toml` together; tag `v<version>`. See CONTRIBUTING.md.
+- Test report: every release rebuilds `docs/test-report.md` and `.html` and commits them. Run `.venv\Scripts\python.exe scripts/report/collect.py` (all checks locally; Docker and Node) or `collect.py --ci` (the finished CI run of the pushed HEAD), then `scripts/report/build.py`. Raw results go to `build/report/` (git-ignored). Live results are hand-kept in `docs/live-verification.json`. `tests/test_report.py` fails when the report does not name the manifest version.
 - Translations: `strings.json` and `translations/en.json` must stay identical; `translations/nl.json` must have the same keys. `tests/test_translations.py` checks both.
 - Run hassfest locally before pushing manifest, strings or icons changes: `docker run --rm -v "<repo>:/github/workspace" ghcr.io/home-assistant/hassfest`.
 - The shell is PowerShell on Windows 11. Test Windows-facing tooling in `pwsh`, not in Git Bash.

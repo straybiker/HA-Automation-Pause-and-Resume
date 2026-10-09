@@ -14,11 +14,11 @@ import type {
 import "./components/automation-pause-list";
 import { define, fireEvent } from "./define";
 import {
-  DEFAULT_ENTITY,
   SERVICE_DOMAIN,
   buildItems,
   dateTimeOptions,
   errorText,
+  findSensor,
   parsePauses,
   pauseBlock,
 } from "./logic";
@@ -63,7 +63,7 @@ export class AutomationPauseCard extends LitElement {
   private _items: AutomationItem[] = [];
 
   public static getStubConfig(): AutomationPauseCardConfig {
-    return { type: `custom:${CARD_TYPE}`, entity: DEFAULT_ENTITY };
+    return { type: `custom:${CARD_TYPE}` };
   }
 
   public setConfig(config: AutomationPauseCardConfig): void {
@@ -103,8 +103,8 @@ export class AutomationPauseCard extends LitElement {
     this._timer = undefined;
   }
 
-  private get _entityId(): string {
-    return this._config?.entity ?? DEFAULT_ENTITY;
+  private _sensorId(hass: HomeAssistant): string | undefined {
+    return findSensor(hass, this._config?.entity);
   }
 
   protected shouldUpdate(changed: PropertyValues): boolean {
@@ -118,13 +118,15 @@ export class AutomationPauseCard extends LitElement {
     if (!old || !hass) {
       return true;
     }
+    // A new entities object can name another sensor, so it renders too.
+    const sensorId = this._sensorId(hass);
     if (
       old.language !== hass.language ||
       old.locale !== hass.locale ||
       old.entities !== hass.entities ||
       old.devices !== hass.devices ||
       old.areas !== hass.areas ||
-      old.states[this._entityId] !== hass.states[this._entityId]
+      (sensorId !== undefined && old.states[sensorId] !== hass.states[sensorId])
     ) {
       return true;
     }
@@ -144,7 +146,8 @@ export class AutomationPauseCard extends LitElement {
   protected willUpdate(): void {
     const hass = this.hass;
     if (hass) {
-      const sensor = hass.states[this._entityId];
+      const sensorId = this._sensorId(hass);
+      const sensor = sensorId ? hass.states[sensorId] : undefined;
       this._items = buildItems(hass, parsePauses(sensor?.attributes.paused));
     }
   }
@@ -156,7 +159,8 @@ export class AutomationPauseCard extends LitElement {
     }
     const language = hass.locale?.language ?? hass.language ?? "en";
     const strings = getStrings(hass.language ?? language);
-    const sensor = hass.states[this._entityId];
+    const sensorId = this._sensorId(hass);
+    const sensor = sensorId ? hass.states[sensorId] : undefined;
     const dateOptions = dateTimeOptions(hass);
     const dialogItem = this._dialogEntityId
       ? this._items.find((item) => item.entity_id === this._dialogEntityId)
@@ -169,9 +173,13 @@ export class AutomationPauseCard extends LitElement {
           : html`<div class="alert warning">
               ${renderIcon(mdiAlertOutline)}
               <span
-                >${formatString(strings.entity_not_found, {
-                  entity: this._entityId,
-                })}</span
+                >${
+                  sensorId
+                    ? formatString(strings.entity_not_found, {
+                        entity: sensorId,
+                      })
+                    : strings.sensor_not_found
+                }</span
               >
             </div>`
       }

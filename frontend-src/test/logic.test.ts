@@ -11,6 +11,7 @@ import {
   durationErrorKey,
   errorText,
   filterItems,
+  findSensor,
   formatDateTime,
   lastTriggeredText,
   matchesSearch,
@@ -556,6 +557,65 @@ describe("data", () => {
         })
       )
     ).toBeUndefined();
+  });
+});
+
+describe("sensor", () => {
+  const entities = (
+    ...entries: { entity_id: string; platform?: string }[]
+  ): Pick<HomeAssistant, "entities"> => ({
+    entities: Object.fromEntries(entries.map((e) => [e.entity_id, e])),
+  });
+
+  it("finds the sensor of a new install by its platform", () => {
+    const hass = entities(
+      { entity_id: "sensor.other", platform: "template" },
+      { entity_id: "automation.one", platform: "automation" },
+      {
+        entity_id: "sensor.automation_pause_and_resume_paused_automations",
+        platform: "automation_pause",
+      }
+    );
+    expect(findSensor(hass)).toBe(
+      "sensor.automation_pause_and_resume_paused_automations"
+    );
+  });
+
+  it("finds the entity ID that an older install keeps", () => {
+    // The entity registry keeps the ID that the sensor got before.
+    const hass = entities(
+      { entity_id: "sensor.paused_automations", platform: "automation_pause" },
+      { entity_id: "sensor.unrelated", platform: "demo" }
+    );
+    expect(findSensor(hass)).toBe("sensor.paused_automations");
+  });
+
+  it("finds a renamed sensor", () => {
+    const hass = entities({
+      entity_id: "sensor.my_pauses",
+      platform: "automation_pause",
+    });
+    expect(findSensor(hass)).toBe("sensor.my_pauses");
+  });
+
+  it("uses the card config entity first", () => {
+    const hass = entities({
+      entity_id: "sensor.paused_automations",
+      platform: "automation_pause",
+    });
+    expect(findSensor(hass, "sensor.chosen")).toBe("sensor.chosen");
+  });
+
+  it("finds nothing without the integration", () => {
+    expect(
+      findSensor(entities({ entity_id: "sensor.other", platform: "demo" }))
+    ).toBeUndefined();
+    expect(
+      findSensor(
+        entities({ entity_id: "automation.x", platform: "automation_pause" })
+      )
+    ).toBeUndefined();
+    expect(findSensor({})).toBeUndefined();
   });
 });
 

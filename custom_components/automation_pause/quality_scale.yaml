@@ -1,0 +1,116 @@
+# Self-assessment against the Integration Quality Scale rules, up to
+# Platinum. Home Assistant gives tiers to core integrations only, and
+# hassfest skips this file for a custom integration. tests/test_quality_scale.py
+# checks that every rule is here and none is todo.
+rules:
+  # Bronze
+  action-setup:
+    status: done
+    comment: async_setup registers the actions; they find the entry at call time.
+  appropriate-polling:
+    status: exempt
+    comment: The integration does not poll. The sensor updates when a pause changes.
+  brands: done
+  common-modules:
+    status: done
+    comment: manager.py holds the pause rules; const.py holds the constants.
+  config-flow-test-coverage: done
+  config-flow: done
+  dependency-transparency:
+    status: exempt
+    comment: The integration has no requirements.
+  docs-actions: done
+  docs-conditions:
+    status: exempt
+    comment: The integration has no conditions.
+  docs-high-level-description: done
+  docs-installation-instructions: done
+  docs-removal-instructions: done
+  docs-triggers:
+    status: exempt
+    comment: The integration has no triggers.
+  entity-event-setup: done
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data: done
+  test-before-configure:
+    status: exempt
+    comment: No device or service to connect to.
+  test-before-setup:
+    status: exempt
+    comment: No device or service to connect to; the pauses are local data.
+  unique-config-entry:
+    status: done
+    comment: The manifest sets single_config_entry.
+
+  # Silver
+  action-exceptions: done
+  config-entry-unloading: done
+  docs-configuration-parameters: done
+  docs-installation-parameters: done
+  entity-unavailable:
+    status: exempt
+    comment: The sensor reads local data, so it is always available.
+  integration-owner: done
+  log-when-unavailable:
+    status: exempt
+    comment: No device or service that can become unavailable.
+  parallel-updates: done
+  reauthentication-flow:
+    status: exempt
+    comment: The integration needs no authentication.
+  test-coverage: done
+
+  # Gold
+  devices: done
+  diagnostics: done
+  discovery-update-info:
+    status: exempt
+    comment: Nothing to discover.
+  discovery:
+    status: exempt
+    comment: Nothing to discover.
+  docs-data-update:
+    status: exempt
+    comment: No data comes from a device or service. The sensor changes when a pause changes.
+  docs-examples: done
+  docs-known-limitations: done
+  docs-supported-devices:
+    status: exempt
+    comment: The integration has no devices to support; it pauses automations.
+  docs-supported-functions: done
+  docs-troubleshooting: done
+  docs-use-cases: done
+  dynamic-devices:
+    status: exempt
+    comment: One service device per config entry, for the life of the entry.
+  entity-category:
+    status: exempt
+    comment: The only entity is the primary entity of the service.
+  entity-device-class:
+    status: exempt
+    comment: No device class fits a number of paused automations.
+  entity-disabled-by-default:
+    status: exempt
+    comment: The only entity feeds the card, so it must be on.
+  entity-translations: done
+  exception-translations: done
+  icon-translations: done
+  reconfiguration-flow:
+    status: exempt
+    comment: The setup only asks for the dashboard options; the options flow changes them.
+  repair-issues:
+    status: exempt
+    comment: Nothing needs a repair. The action errors tell the user what to fix.
+  stale-devices:
+    status: exempt
+    comment: One service device per config entry, removed with the entry.
+
+  # Platinum
+  async-dependency:
+    status: exempt
+    comment: The integration has no requirements.
+  inject-websession:
+    status: exempt
+    comment: The integration makes no HTTP requests.
+  strict-typing: done
