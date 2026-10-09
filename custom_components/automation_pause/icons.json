@@ -1,0 +1,17 @@
+{
+  "entity": {
+    "sensor": {
+      "paused_automations": {
+        "default": "mdi:timer-pause-outline"
+      }
+    }
+  },
+  "services": {
+    "pause": {
+      "service": "mdi:pause-circle-outline"
+    },
+    "resume": {
+      "service": "mdi:play-circle-outline"
+    }
+  }
+}

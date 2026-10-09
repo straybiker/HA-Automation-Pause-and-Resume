@@ -1,9 +1,102 @@
 {
   "config": {
+    "abort": {
+      "single_instance_allowed": "Automation Pause and Resume is already set up."
+    },
     "step": {
       "user": {
-        "description": "Pause any automation for a set time. It turns on again by itself."
+        "description": "Pause any automation for a set time. It turns on again by itself.",
+        "data": {
+          "dashboard": "Add a dashboard",
+          "dashboard_title": "Dashboard name"
+        },
+        "data_description": {
+          "dashboard": "Adds a dashboard to the sidebar that lists all automations. You can pause and resume them there. You can add or remove it later under Configure.",
+          "dashboard_title": "The name of the dashboard in the sidebar."
+        }
       }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Dashboard",
+        "description": "The dashboard in the sidebar. You can edit it like any other dashboard.",
+        "data": {
+          "dashboard": "Show the dashboard",
+          "dashboard_title": "Dashboard name",
+          "dashboard_rebuild": "Rebuild the dashboard"
+        },
+        "data_description": {
+          "dashboard": "Off removes the dashboard and your edits to it.",
+          "dashboard_title": "The name in the sidebar. A new name applies after you save; the dashboard content stays.",
+          "dashboard_rebuild": "Builds the dashboard again and discards your edits."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "paused_automations": {
+        "name": "Paused automations",
+        "state_attributes": {
+          "paused": {
+            "name": "Paused"
+          }
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "not_loaded": {
+      "message": "Automation Pause and Resume is not loaded."
+    },
+    "no_entities": {
+      "message": "Select at least one automation."
+    },
+    "not_automation": {
+      "message": "{entity_id} is not an automation."
+    },
+    "not_found": {
+      "message": "{entity_id} does not exist."
+    },
+    "unavailable": {
+      "message": "{entity_id} is unavailable."
+    },
+    "no_id": {
+      "message": "{entity_id} has no id. Add an id: to this automation in YAML. Without it, a restart or reload turns the automation on again."
+    },
+    "already_off": {
+      "message": "{entity_id} is already off. There is nothing to pause."
+    },
+    "not_paused": {
+      "message": "{entity_id} is not paused."
+    },
+    "duration_too_short": {
+      "message": "A pause must be at least 1 minute."
+    },
+    "duration_too_long": {
+      "message": "A pause can be at most 365 days."
+    }
+  },
+  "services": {
+    "pause": {
+      "name": "Pause",
+      "description": "Turns automations off for a set time. When the time ends, they turn on again.",
+      "fields": {
+        "duration": {
+          "name": "Duration",
+          "description": "How long the automations stay off. From 1 minute to 365 days. A second pause replaces the end time."
+        },
+        "stop_actions": {
+          "name": "Stop actions",
+          "description": "Stops the actions that are running now."
+        }
+      }
+    },
+    "resume": {
+      "name": "Resume",
+      "description": "Ends the pause now and turns the automations on again."
     }
   }
 }

@@ -10,5 +10,9 @@
 # requirements-dev-windows.txt for the static tests and run the Home
 # Assistant tests in Docker (scripts/test-ha.ps1) or CI.
 pytest-homeassistant-custom-component==0.13.371
+# The manifest depends on frontend (the integration serves its own card), and
+# frontend's setup imports hass_frontend. The test harness does not install it.
+# Keep it at the version in Home Assistant's frontend manifest.
+home-assistant-frontend==20260930.2
 # Keep in step with the ruff version in .github/workflows/test.yml.
 ruff==0.16.10

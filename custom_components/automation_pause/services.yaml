@@ -1,0 +1,19 @@
+pause:
+  target:
+    entity:
+      domain: automation
+  fields:
+    duration:
+      required: true
+      example: "01:00:00"
+      selector:
+        duration:
+          enable_day: true
+    stop_actions:
+      default: true
+      selector:
+        boolean:
+resume:
+  target:
+    entity:
+      domain: automation

@@ -1,9 +1,102 @@
 {
   "config": {
+    "abort": {
+      "single_instance_allowed": "Automation Pause and Resume is al ingesteld."
+    },
     "step": {
       "user": {
-        "description": "Pauzeer een automatisering voor een bepaalde tijd. Ze schakelt daarna vanzelf weer in."
+        "description": "Pauzeer een automatisering voor een bepaalde tijd. Ze schakelt daarna vanzelf weer in.",
+        "data": {
+          "dashboard": "Een dashboard toevoegen",
+          "dashboard_title": "Naam van het dashboard"
+        },
+        "data_description": {
+          "dashboard": "Voegt een dashboard toe aan de zijbalk met alle automatiseringen. Daar pauzeer en hervat je ze. Je kunt het later toevoegen of verwijderen via Configureren.",
+          "dashboard_title": "De naam van het dashboard in de zijbalk."
+        }
       }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Dashboard",
+        "description": "Het dashboard in de zijbalk. Je kunt het bewerken zoals elk ander dashboard.",
+        "data": {
+          "dashboard": "Het dashboard tonen",
+          "dashboard_title": "Naam van het dashboard",
+          "dashboard_rebuild": "Het dashboard opnieuw opbouwen"
+        },
+        "data_description": {
+          "dashboard": "Uit verwijdert het dashboard en je wijzigingen eraan.",
+          "dashboard_title": "De naam in de zijbalk. Een nieuwe naam geldt na het opslaan; de inhoud van het dashboard blijft.",
+          "dashboard_rebuild": "Bouwt het dashboard opnieuw op en verwijdert je wijzigingen."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "paused_automations": {
+        "name": "Gepauzeerde automatiseringen",
+        "state_attributes": {
+          "paused": {
+            "name": "Gepauzeerd"
+          }
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "not_loaded": {
+      "message": "Automation Pause and Resume is niet geladen."
+    },
+    "no_entities": {
+      "message": "Kies minstens één automatisering."
+    },
+    "not_automation": {
+      "message": "{entity_id} is geen automatisering."
+    },
+    "not_found": {
+      "message": "{entity_id} bestaat niet."
+    },
+    "unavailable": {
+      "message": "{entity_id} is niet beschikbaar."
+    },
+    "no_id": {
+      "message": "{entity_id} heeft geen id. Voeg een id: toe aan deze automatisering in YAML. Zonder id schakelt een herstart of herlading de automatisering weer in."
+    },
+    "already_off": {
+      "message": "{entity_id} staat al uit. Er is niets te pauzeren."
+    },
+    "not_paused": {
+      "message": "{entity_id} is niet gepauzeerd."
+    },
+    "duration_too_short": {
+      "message": "Een pauze duurt minstens 1 minuut."
+    },
+    "duration_too_long": {
+      "message": "Een pauze duurt hoogstens 365 dagen."
+    }
+  },
+  "services": {
+    "pause": {
+      "name": "Pauzeren",
+      "description": "Schakelt automatiseringen uit voor een bepaalde tijd. Daarna schakelen ze weer in.",
+      "fields": {
+        "duration": {
+          "name": "Duur",
+          "description": "Hoe lang de automatiseringen uit blijven. Van 1 minuut tot 365 dagen. Een tweede pauze vervangt het eindtijdstip."
+        },
+        "stop_actions": {
+          "name": "Acties stoppen",
+          "description": "Stopt de acties die nu lopen."
+        }
+      }
+    },
+    "resume": {
+      "name": "Hervatten",
+      "description": "Beëindigt de pauze nu en schakelt de automatiseringen weer in."
     }
   }
 }
