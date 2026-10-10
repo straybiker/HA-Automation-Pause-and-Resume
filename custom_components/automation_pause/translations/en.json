@@ -21,21 +21,49 @@
     "step": {
       "init": {
         "title": "Options",
-        "description": "The dashboard in the sidebar, and a notification when a pause ends.",
+        "description": "The dashboard in the sidebar, a notification when a pause ends, and the durations in the pause dialog.",
         "data": {
           "dashboard": "Show the dashboard",
           "dashboard_title": "Dashboard name",
           "dashboard_require_admin": "Admin only",
           "dashboard_rebuild": "Rebuild the dashboard",
-          "notify_resumed": "Notify when a pause ends"
+          "notify_resumed": "Notify when a pause ends",
+          "durations": "Durations in the pause dialog"
         },
         "data_description": {
           "dashboard": "Off removes the dashboard and your edits to it.",
           "dashboard_title": "The name in the sidebar. A new name applies after you save; the dashboard content stays.",
           "dashboard_require_admin": "Only administrators see the dashboard in the sidebar.",
           "dashboard_rebuild": "Builds the dashboard again and discards your edits.",
-          "notify_resumed": "Shows a Home Assistant notification when the timer ends a pause and the automation turns on again. A resume by you gives no notification."
+          "notify_resumed": "Shows a Home Assistant notification when the timer ends a pause and the automation turns on again. A resume by you gives no notification.",
+          "durations": "The choices in the pause dialog of the card. Pick from the list, or type a number and a unit: m, h, d or w, for example 45m. From 1 minute to 365 days. Custom is always in the dialog."
         }
+      }
+    },
+    "error": {
+      "invalid_duration": "Use a number and a unit, for example 45m, 2h, 3d or 2w, from 1 minute to 365 days."
+    }
+  },
+  "selector": {
+    "durations": {
+      "options": {
+        "5m": "5 minutes",
+        "10m": "10 minutes",
+        "15m": "15 minutes",
+        "30m": "30 minutes",
+        "1h": "1 hour",
+        "2h": "2 hours",
+        "3h": "3 hours",
+        "4h": "4 hours",
+        "6h": "6 hours",
+        "8h": "8 hours",
+        "12h": "12 hours",
+        "1d": "1 day",
+        "2d": "2 days",
+        "3d": "3 days",
+        "1w": "1 week",
+        "2w": "2 weeks",
+        "4w": "4 weeks"
       }
     }
   },
@@ -46,6 +74,9 @@
         "state_attributes": {
           "paused": {
             "name": "Paused"
+          },
+          "durations": {
+            "name": "Durations"
           }
         }
       }

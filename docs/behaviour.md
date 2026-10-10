@@ -171,8 +171,19 @@ The sensor **Paused automations** belongs to the service device **Automation Pau
 
 - State: the number of pauses.
 - Attribute `paused`: a list of `{entity_id, paused_at, resume_at}`, the first to end first.
+- Attribute `durations`: the durations of the card's pause dialog, in whole minutes, short to long. See Durations. The recorder does not keep it: it changes only with the options.
 
 The entity ID is not fixed. A new install gets `sensor.automation_pause_and_resume_paused_automations` (device name, then entity name). The entity registry keeps the ID of an older install, `sensor.paused_automations`. The card finds the sensor by its platform, `automation_pause`, so every ID works. The card option `entity` overrides this.
+
+## Durations
+
+The option **Durations in the pause dialog** sets the choices in the card's pause dialog. It changes no pause rule: the actions still take any duration from 1 minute to 365 days.
+
+- Value: a number and a unit, `m`, `h`, `d` or `w`, from 1 minute to 365 days. Upper case and spaces are accepted. Any other value fails with `invalid_duration` and nothing is saved.
+- Stored: sorted short to long, each length of time once, in the largest whole unit (`60m` is stored as `1h`, `7d` as `1w`).
+- An entry without the option uses the default: `15m`, `1h`, `1d`, `1w`. A new install has no option until the user saves the options.
+- An empty list is valid. The dialog then shows only Custom.
+- The card reads the sensor attribute `durations`. Without it (an older backend) the card uses the default list. Custom is always the last item.
 
 ## Diagnostics
 

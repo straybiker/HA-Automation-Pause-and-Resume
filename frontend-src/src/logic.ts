@@ -432,27 +432,49 @@ export const durationFromSeconds = (total: number): Duration => {
   return { days, hours, minutes, seconds: rest - minutes * 60 };
 };
 
-export interface DurationPreset {
-  key: string;
-  seconds: number;
-  unit: "minute" | "hour" | "day" | "week";
-  value: number;
-}
+/** The dialog list of a backend without the "durations" attribute. */
+export const DEFAULT_DURATIONS: readonly number[] = [15, 60, 1440, 10080];
 
-export const DURATION_PRESETS: readonly DurationPreset[] = [
-  { key: "15m", seconds: 15 * 60, unit: "minute", value: 15 },
-  { key: "1h", seconds: 3600, unit: "hour", value: 1 },
-  { key: "1d", seconds: 86400, unit: "day", value: 1 },
-  { key: "1w", seconds: 7 * 86400, unit: "week", value: 1 },
-];
+const MIN_DURATION_MINUTES = MIN_DURATION_SECONDS / 60;
+const MAX_DURATION_MINUTES = MAX_DURATION_SECONDS / 60;
 
-/** "15 minutes", "1 uur", … in the user's language. */
-export const presetLabel = (preset: DurationPreset, language: string) =>
-  new Intl.NumberFormat(language, {
+/**
+ * Reads the "durations" attribute of the sensor: minutes. Bad entries are
+ * skipped. An empty list is valid: the dialog then shows only Custom. A
+ * missing attribute (an older backend) gives the default list.
+ */
+export const parseDurations = (value: unknown): number[] => {
+  if (!Array.isArray(value)) {
+    return [...DEFAULT_DURATIONS];
+  }
+  const minutes = value.filter(
+    (entry): entry is number =>
+      Number.isInteger(entry) &&
+      entry >= MIN_DURATION_MINUTES &&
+      entry <= MAX_DURATION_MINUTES
+  );
+  return [...new Set(minutes)].sort((a, b) => a - b);
+};
+
+// Largest first: a value takes the largest unit that divides it.
+const LABEL_UNITS = [
+  ["week", 7 * 1440],
+  ["day", 1440],
+  ["hour", 60],
+  ["minute", 1],
+] as const;
+
+/** "15 minutes", "90 minutes", "2 hours", "1 week", "1 uur", … */
+export const durationLabel = (minutes: number, language: string): string => {
+  const [unit, size] =
+    LABEL_UNITS.find(([, divisor]) => minutes % divisor === 0) ??
+    LABEL_UNITS[3];
+  return new Intl.NumberFormat(language, {
     style: "unit",
-    unit: preset.unit,
+    unit,
     unitDisplay: "long",
-  }).format(preset.value);
+  }).format(minutes / size);
+};
 
 export type DurationError = "invalid" | "too_short" | "too_long";
 

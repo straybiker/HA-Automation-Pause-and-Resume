@@ -11,7 +11,7 @@ Requirements:
 - New automations appear in the picker with no change.
 - The pause survives an HA restart.
 - The picker has search and sorts by last run.
-- Durations: 15 minutes, 1 hour, 1 day, 1 week, custom.
+- Durations: a list set in the options (default 15 minutes, 1 hour, 1 day, 1 week), and custom.
 - Ready to use after install: the integration ships its own dashboard.
 - The dashboard looks and behaves like the built-in Settings → Automations list. This keeps a later core contribution realistic.
 
@@ -142,7 +142,7 @@ Look and feel: the card copies the built-in Settings → Automations list (`ha-c
   - Last triggered as relative time, "Never" when empty.
   - Status: the same enabled switch as the built-in list. A paused row shows a chip "Resumes in 12 min" instead.
   - Overflow menu (⋮) with the built-in entries kept in the same order where they make sense, plus a pause entry.
-- Pause flow: select the automation (row click, or "Pause…" in the ⋮ menu). A dialog styled like `ha-dialog` lists the durations as list items: 15 minutes, 1 hour, 1 day, 1 week, Custom (number + unit). Pick one, press "Pause".
+- Pause flow: select the automation (row click, or "Pause…" in the ⋮ menu). A dialog styled like `ha-dialog` lists the durations of the options as list items (default 15 minutes, 1 hour, 1 day, 1 week), then Custom (number + unit). Pick one, press "Pause".
 - Paused row menu: "Resume now" and "Extend…" (same dialog).
 - Rows for automations without `id` or already off cannot be paused. The dialog explains why.
 - Behavior and data:

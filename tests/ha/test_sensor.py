@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import timedelta
 
 from homeassistant.core import HomeAssistant
+from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
@@ -104,3 +105,36 @@ async def test_an_older_install_keeps_its_entity_id(
     assert current.state == "1"
     assert [p["entity_id"] for p in current.attributes["paused"]] == [KITCHEN]
     assert er.async_get(hass).async_get(OLD_SENSOR).device_id is not None
+
+
+async def test_the_sensor_lists_the_durations(
+    hass: HomeAssistant, automations, entry: MockConfigEntry
+) -> None:
+    """In minutes, for the card. The defaults until the options set a list."""
+    await setup(hass, entry)
+    assert hass.states.get(SENSOR).attributes["durations"] == [15, 60, 1440, 10080]
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"dashboard": False, "durations": ["2w", "90m", "1h"]}
+    )
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    await hass.async_block_till_done()
+    assert hass.states.get(SENSOR).attributes["durations"] == [60, 90, 20160]
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"dashboard": False, "durations": []}
+    )
+    await hass.async_block_till_done()
+    assert hass.states.get(SENSOR).attributes["durations"] == []
+
+
+async def test_the_recorder_skips_the_durations(
+    hass: HomeAssistant, automations, entry: MockConfigEntry
+) -> None:
+    """A setting, not a pause: no copy in every history row."""
+    await setup(hass, entry)
+    unrecorded = hass.states.get(SENSOR).state_info["unrecorded_attributes"]
+    assert "durations" in unrecorded
+    assert "paused" not in unrecorded

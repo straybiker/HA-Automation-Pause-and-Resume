@@ -21,21 +21,49 @@
     "step": {
       "init": {
         "title": "Opties",
-        "description": "Het dashboard in de zijbalk, en een melding wanneer een pauze eindigt.",
+        "description": "Het dashboard in de zijbalk, een melding wanneer een pauze eindigt, en de duurkeuzes in het pauzevenster.",
         "data": {
           "dashboard": "Het dashboard tonen",
           "dashboard_title": "Naam van het dashboard",
           "dashboard_require_admin": "Alleen beheerders",
           "dashboard_rebuild": "Het dashboard opnieuw opbouwen",
-          "notify_resumed": "Melden wanneer een pauze eindigt"
+          "notify_resumed": "Melden wanneer een pauze eindigt",
+          "durations": "Duurkeuzes in het pauzevenster"
         },
         "data_description": {
           "dashboard": "Uit verwijdert het dashboard en je wijzigingen eraan.",
           "dashboard_title": "De naam in de zijbalk. Een nieuwe naam geldt na het opslaan; de inhoud van het dashboard blijft.",
           "dashboard_require_admin": "Alleen beheerders zien het dashboard in de zijbalk.",
           "dashboard_rebuild": "Bouwt het dashboard opnieuw op en verwijdert je wijzigingen.",
-          "notify_resumed": "Toont een Home Assistant-melding wanneer de timer een pauze beëindigt en de automatisering weer inschakelt. Zelf hervatten geeft geen melding."
+          "notify_resumed": "Toont een Home Assistant-melding wanneer de timer een pauze beëindigt en de automatisering weer inschakelt. Zelf hervatten geeft geen melding.",
+          "durations": "De keuzes in het pauzevenster van de kaart. Kies uit de lijst, of typ een getal en een eenheid: m, h, d of w, bijvoorbeeld 45m. Van 1 minuut tot 365 dagen. Aangepast staat altijd in het venster."
         }
+      }
+    },
+    "error": {
+      "invalid_duration": "Gebruik een getal en een eenheid, bijvoorbeeld 45m, 2h, 3d of 2w, van 1 minuut tot 365 dagen."
+    }
+  },
+  "selector": {
+    "durations": {
+      "options": {
+        "5m": "5 minuten",
+        "10m": "10 minuten",
+        "15m": "15 minuten",
+        "30m": "30 minuten",
+        "1h": "1 uur",
+        "2h": "2 uur",
+        "3h": "3 uur",
+        "4h": "4 uur",
+        "6h": "6 uur",
+        "8h": "8 uur",
+        "12h": "12 uur",
+        "1d": "1 dag",
+        "2d": "2 dagen",
+        "3d": "3 dagen",
+        "1w": "1 week",
+        "2w": "2 weken",
+        "4w": "4 weken"
       }
     }
   },
@@ -46,6 +74,9 @@
         "state_attributes": {
           "paused": {
             "name": "Gepauzeerd"
+          },
+          "durations": {
+            "name": "Duurkeuzes"
           }
         }
       }

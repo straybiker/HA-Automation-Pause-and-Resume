@@ -19,6 +19,7 @@ import {
   dateTimeOptions,
   errorText,
   findSensor,
+  parseDurations,
   parsePauses,
   pauseBlock,
 } from "./logic";
@@ -198,6 +199,7 @@ export class AutomationPauseCard extends LitElement {
         .language=${language}
         .now=${this._now}
         .dateOptions=${dateOptions}
+        .durations=${parseDurations(sensor?.attributes.durations)}
         .busy=${this._dialogBusy}
         .error=${this._dialogError}
         @automation-pause-pause-submit=${this._handlePause}

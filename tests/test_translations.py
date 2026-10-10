@@ -58,3 +58,12 @@ def test_every_exception_has_text():
     raised = set(re.findall(r'translation_key="(\w+)"', source))
     assert raised  # the pattern still finds the raises
     assert raised <= set(STRINGS["exceptions"])
+
+
+def test_every_options_error_has_text():
+    """Only the options flow validates input, so its errors live in
+    options.error. The setup flow has no error to show."""
+    source = "".join(p.read_text("utf-8") for p in ROOT.glob("*.py"))
+    raised = set(re.findall(r'SchemaFlowError\("(\w+)"\)', source))
+    assert raised  # the pattern still finds the raises
+    assert raised <= set(STRINGS["options"]["error"])

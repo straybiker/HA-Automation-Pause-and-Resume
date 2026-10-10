@@ -2,13 +2,14 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   BACKEND_ERROR_KEYS,
-  DURATION_PRESETS,
+  DEFAULT_DURATIONS,
   buildItems,
   checkDuration,
   countdownText,
   countdownTime,
   dateTimeOptions,
   durationErrorKey,
+  durationLabel,
   errorText,
   filterItems,
   findSensor,
@@ -16,9 +17,9 @@ import {
   lastTriggeredText,
   matchesSearch,
   parseCustomDuration,
+  parseDurations,
   parsePauses,
   pauseBlock,
-  presetLabel,
   relativeTime,
   sortItems,
 } from "../src/logic";
@@ -309,16 +310,74 @@ describe("relative time", () => {
 });
 
 describe("durations", () => {
-  it("has the four presets in the user's language", () => {
-    expect(DURATION_PRESETS.map((p) => presetLabel(p, "en"))).toEqual([
-      "15 minutes",
-      "1 hour",
-      "1 day",
-      "1 week",
+  it("reads the list of the sensor in minutes, sorted, each once", () => {
+    expect(parseDurations([1440, 15, 60, 15, 10080])).toEqual([
+      15, 60, 1440, 10080,
     ]);
-    expect(presetLabel(DURATION_PRESETS[1], "nl")).toBe("1 uur");
-    for (const preset of DURATION_PRESETS) {
-      expect(checkDuration(preset.seconds).error).toBeUndefined();
+    expect(parseDurations([])).toEqual([]);
+  });
+
+  it("skips bad entries in the list", () => {
+    expect(
+      parseDurations([
+        "15",
+        null,
+        {},
+        Number.NaN,
+        Number.POSITIVE_INFINITY,
+        1.5,
+        0,
+        -60,
+        525601,
+        1,
+        525600,
+      ])
+    ).toEqual([1, 525600]);
+  });
+
+  it("uses the default list without the attribute", () => {
+    for (const value of [undefined, null, "15,60", 15, {}]) {
+      expect(parseDurations(value)).toEqual([15, 60, 1440, 10080]);
+    }
+    expect(parseDurations(undefined)).toEqual(DEFAULT_DURATIONS);
+    // A copy: the dialog must not change the default.
+    expect(parseDurations(undefined)).not.toBe(DEFAULT_DURATIONS);
+  });
+
+  it("labels each duration with the largest whole unit", () => {
+    expect(
+      [15, 90, 60, 120, 1440, 2160, 10080, 20160, 525600].map((m) =>
+        plain(durationLabel(m, "en"))
+      )
+    ).toEqual([
+      "15 minutes",
+      "90 minutes",
+      "1 hour",
+      "2 hours",
+      "1 day",
+      "36 hours",
+      "1 week",
+      "2 weeks",
+      "365 days",
+    ]);
+    expect(
+      [15, 60, 120, 1440, 2880, 10080, 20160].map((m) =>
+        plain(durationLabel(m, "nl"))
+      )
+    ).toEqual([
+      "15 minuten",
+      "1 uur",
+      "2 uur",
+      "1 dag",
+      "2 dagen",
+      "1 week",
+      "2 weken",
+    ]);
+  });
+
+  it("accepts every default duration", () => {
+    for (const minutes of DEFAULT_DURATIONS) {
+      expect(checkDuration(minutes * 60).error).toBeUndefined();
     }
     expect(checkDuration(7 * 86400).duration).toEqual({
       days: 7,

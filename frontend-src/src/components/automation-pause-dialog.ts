@@ -10,14 +10,14 @@ import { mdiAlertCircleOutline, mdiAlertOutline, mdiClose } from "@mdi/js";
 import { define, fireEvent } from "../define";
 import type { DateTimeOptions, DurationResult } from "../logic";
 import {
-  DURATION_PRESETS,
+  DEFAULT_DURATIONS,
   checkDuration,
   countdownText,
   durationErrorKey,
+  durationLabel,
   formatDateTime,
   parseCustomDuration,
   pauseBlock,
-  presetLabel,
 } from "../logic";
 import type { Strings } from "../strings";
 import { formatString } from "../strings";
@@ -53,6 +53,10 @@ export class AutomationPauseDialog extends LitElement {
   @property({ attribute: false }) public now = Date.now();
 
   @property({ attribute: false }) public dateOptions: DateTimeOptions = {};
+
+  /** The list in minutes, sorted. Custom always follows it. */
+  @property({ attribute: false }) public durations: readonly number[] =
+    DEFAULT_DURATIONS;
 
   @property({ type: Boolean }) public busy = false;
 
@@ -100,8 +104,11 @@ export class AutomationPauseDialog extends LitElement {
         ? parseCustomDuration(this._customValue, this._customUnit)
         : undefined;
     }
-    const preset = DURATION_PRESETS.find((p) => p.key === this._choice);
-    return preset ? checkDuration(preset.seconds) : undefined;
+    // The list can change while the dialog is open.
+    const minutes = Number(this._choice);
+    return this.durations.includes(minutes)
+      ? checkDuration(minutes * 60)
+      : undefined;
   }
 
   protected render(): TemplateResult {
@@ -213,8 +220,11 @@ export class AutomationPauseDialog extends LitElement {
         role="radiogroup"
         aria-label=${strings.dialog_durations}
       >
-        ${DURATION_PRESETS.map((preset) =>
-          this._renderChoice(preset.key, presetLabel(preset, this.language))
+        ${this.durations.map((minutes) =>
+          this._renderChoice(
+            String(minutes),
+            durationLabel(minutes, this.language)
+          )
         )}
         ${this._renderChoice("custom", strings.custom)}
       </div>

@@ -115,6 +115,24 @@ async def test_rebuild_discards_the_edits(
     assert "dashboard_rebuild" not in with_dashboard.options
 
 
+async def test_no_rebuild_when_the_form_has_an_error(
+    hass: HomeAssistant, automations, lovelace, with_dashboard: MockConfigEntry
+) -> None:
+    """The rebuild deletes the dashboard at once, so a bad duration must stop
+    it first: the user can still cancel the form."""
+    await setup(hass, with_dashboard)
+    mine = {"views": [{"title": "Mine", "path": "mine"}]}
+    await hass.data[LOVELACE_DATA].dashboards[PATH].async_save(mine)
+    result = await hass.config_entries.options.async_init(with_dashboard.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"],
+        {"dashboard": True, "dashboard_rebuild": True, "durations": ["soon"]},
+    )
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {"base": "invalid_duration"}
+    assert await _config(hass) == mine
+
+
 async def test_rebuild_without_other_changes(
     hass: HomeAssistant, automations, lovelace, with_dashboard: MockConfigEntry
 ) -> None:

@@ -51,3 +51,14 @@ CONF_DASHBOARD_REQUIRE_ADMIN = "dashboard_require_admin"
 CONF_NOTIFY_RESUMED = "notify_resumed"
 # When the user last rebuilt the dashboard; makes a rebuild change the options.
 CONF_DASHBOARD_REBUILT = "dashboard_rebuilt"
+
+# The durations in the card's pause dialog, as text such as "15m". The
+# sensor sends them as minutes. An entry without the option uses the default.
+CONF_DURATIONS = "durations"
+ATTR_DURATIONS = "durations"
+DEFAULT_DURATIONS = ("15m", "1h", "1d", "1w")
+# The fixed choices of the options form; the user can type any other value.
+DURATION_CHOICES = (
+    "5m", "10m", "15m", "30m", "1h", "2h", "3h", "4h", "6h", "8h", "12h",
+    "1d", "2d", "3d", "1w", "2w", "4w"
+)  # fmt: skip

@@ -73,7 +73,7 @@ The card keeps its EN and NL texts in `frontend-src/src/strings.ts`. Where Home 
 
 Texts that come from `Intl` and need no string:
 
-- The duration list ("15 minutes", "1 hour", "1 day", "1 week"): `Intl.NumberFormat` with `style: "unit"`.
+- The duration list ("15 minutes", "90 minutes", "2 hours", "1 week"): `Intl.NumberFormat` with `style: "unit"` and the largest unit that divides the value: week, day, hour or minute. The values come from the sensor attribute `durations`.
 - Relative times ("12 minutes ago", "in 12 min."): `Intl.RelativeTimeFormat`, with the unit steps of HA's `selectUnit`.
 - Dates older than 3 days: `Intl.DateTimeFormat`, as HA's `formatShortDateTimeWithConditionalYear`.
 

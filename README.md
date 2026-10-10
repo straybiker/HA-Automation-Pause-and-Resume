@@ -8,7 +8,7 @@ Status: beta, in development. The build plan is in [docs/PLAN.md](docs/PLAN.md).
 
 ## Features
 
-- Pause any automation for 15 minutes, 1 hour, 1 day, 1 week or a custom time (1 minute to 365 days).
+- Pause any automation for a duration from the list or a custom time (1 minute to 365 days). The list is 15 minutes, 1 hour, 1 day and 1 week; you can change it under Options.
 - No helper, script or edit per automation. New automations appear with no change.
 - The pause survives a Home Assistant restart. An end time that passed while Home Assistant was down resumes the automation at startup.
 - A sidebar dashboard that looks like Settings → Automations, with search, filters and sort by last triggered.
@@ -85,7 +85,7 @@ When an automation does not turn on at the end, its pause stays. The `resume` ac
 
 ### Sensor and events
 
-- The sensor **Paused automations** belongs to the service device **Automation Pause and Resume**. State: the number of pauses. Attribute `paused`: a list of `{entity_id, paused_at, resume_at}`.
+- The sensor **Paused automations** belongs to the service device **Automation Pause and Resume**. State: the number of pauses. Attribute `paused`: a list of `{entity_id, paused_at, resume_at}`. Attribute `durations`: the list of the pause dialog in minutes, for example `[15, 60, 1440, 10080]`. The recorder does not keep `durations`.
   - A new install names it `sensor.automation_pause_and_resume_paused_automations`. An older install keeps `sensor.paused_automations`.
 - `automation_pause_started` (data: `entity_id`, `paused_at`, `resume_at`) and `automation_pause_resumed` (data: `entity_id`, `reason`: `timer`, `service`, `manual` or `removed`). Both show in the logbook.
 
@@ -167,6 +167,11 @@ actions:
 - **Admin only**: only administrators see the dashboard in the sidebar.
 - **Rebuild the dashboard**: discards your edits and builds the dashboard again.
 - **Notify when a pause ends**: a Home Assistant notification (the bell in the sidebar) when the timer ends a pause, also when the end time passed while Home Assistant was down. A resume by you, by an action or with the switch gives no notification. A new end of the same automation replaces its notification.
+- **Durations in the pause dialog**: the choices in the dialog of the card. A new install starts with 15 minutes, 1 hour, 1 day and 1 week.
+  - Pick from the list (5 minutes to 4 weeks), or type your own value: a number and a unit, `m` (minutes), `h` (hours), `d` (days) or `w` (weeks). For example `45m`, `2h`, `3d` or `2w`. From 1 minute to 365 days.
+  - The integration sorts the list from short to long and keeps each length of time once: `60m` and `1h` are the same. It stores the largest whole unit, so `60m` becomes `1h`.
+  - **Custom** is always the last item in the dialog. With an empty list, the dialog shows only Custom.
+  - The list only sets the choices in the card. The `pause` action takes any duration from 1 minute to 365 days.
 
 Change this dashboard here, under **Configure**. The dialog in Settings → Dashboards cannot save it.
 
