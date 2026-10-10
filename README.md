@@ -9,9 +9,12 @@ Home Assistant has no "turn off for 1 hour". `automation.turn_off` lasts until s
 - Pause any automation for a duration from the list or a custom time (1 minute to 365 days). The list is 15 minutes, 1 hour, 1 day and 1 week; you can change it under Options.
 - No helper, script or edit per automation. New automations appear with no change.
 - The pause survives a Home Assistant restart. An end time that passed while Home Assistant was down resumes the automation at startup.
-- A sidebar dashboard that looks like Settings → Automations, with search, filters and sort by last triggered.
+- A sidebar dashboard that looks like Settings → Automations, with search, filters, sort and a countdown for each pause.
+- A card for any other dashboard. It follows the dashboard theme, also card-mod themes.
+- An optional notification when a pause ends.
 - Two actions, `automation_pause.pause` and `automation_pause.resume`, for your own scripts and automations.
-- A sensor that lists the pauses, and events for notifications.
+- A sensor that lists the pauses, and events for your own automations.
+- English and Dutch.
 
 ## Use cases
 
@@ -209,7 +212,7 @@ The card shows "Custom element doesn't exist: automation-pause-card", or the old
 
 1. Restart Home Assistant after a HACS download.
 2. Reload the page without the browser cache: Ctrl+F5, or Cmd+Shift+R on a Mac.
-3. In the Companion app: **Settings → Companion app → Debugging → Reset frontend cache**.
+3. In the Companion app: force stop the app, or use **Reset frontend cache** in the app settings (under **Troubleshooting** or **Debugging**, by app version).
 4. Look in **Settings → System → Logs** for "automation-pause-card could not load". The entry names the error and the browser. Add it to an issue.
 
 ### The card says the sensor is not available
