@@ -210,6 +210,18 @@
           "check": "Deleting a paused automation ends its pause (reason removed).",
           "result": "pass",
           "note": "The sensor dropped the deleted automation at once."
+        },
+        {
+          "step": "card",
+          "check": "Closing the pause dialog raises no error in Home Assistant.",
+          "result": "pass",
+          "note": "Opened and closed without a pause; the system log has no frontend error."
+        },
+        {
+          "step": "icons",
+          "check": "The list shows each automation's own icon.",
+          "result": "pass",
+          "note": ""
         }
       ]
     }
