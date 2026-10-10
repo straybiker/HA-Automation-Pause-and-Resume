@@ -4,12 +4,15 @@
 
 import { build } from "esbuild";
 
-const outfile =
-  "../custom_components/automation_pause/frontend/automation-pause-card.js";
+const outdir = "../custom_components/automation_pause/frontend";
 
+// The loader is what Home Assistant imports; it loads the card next to it.
 const result = await build({
-  entryPoints: ["src/automation-pause-card.ts"],
-  outfile,
+  entryPoints: {
+    "automation-pause-card": "src/automation-pause-card.ts",
+    "automation-pause-loader": "src/loader.ts",
+  },
+  outdir,
   bundle: true,
   format: "esm",
   minify: true,
@@ -24,10 +27,9 @@ const result = await build({
   },
 });
 
-const output = result.metafile.outputs[outfile];
-const bytes = output?.bytes ?? 0;
-const imports = output?.imports ?? [];
-if (imports.some((entry) => entry.external)) {
-  throw new Error("The bundle must not import external modules.");
+for (const [file, output] of Object.entries(result.metafile.outputs)) {
+  if (output.imports.some((entry) => entry.external)) {
+    throw new Error(`${file} must not import external modules.`);
+  }
+  console.log(`Wrote ${file} (${(output.bytes / 1024).toFixed(1)} KiB)`);
 }
-console.log(`Wrote ${outfile} (${(bytes / 1024).toFixed(1)} KiB)`);

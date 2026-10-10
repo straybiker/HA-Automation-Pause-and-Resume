@@ -12,7 +12,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 from pytest_homeassistant_custom_component.typing import ClientSessionGenerator
 
 from custom_components.automation_pause import frontend
-from custom_components.automation_pause.const import CARD_FILE
+from custom_components.automation_pause.const import CARD_FILE, LOADER_FILE
 
 from .conftest import setup
 
@@ -23,21 +23,27 @@ MANIFEST = (
     / "manifest.json"
 )
 CARD_PATH = f"/automation_pause/{CARD_FILE}"
+LOADER_PATH = f"/automation_pause/{LOADER_FILE}"
 
 
 def _version() -> str:
     return json.loads(MANIFEST.read_text(encoding="utf-8"))["version"]
 
 
-def _card_urls(hass: HomeAssistant) -> list[str]:
-    return [url for url in hass.data[DATA_EXTRA_MODULE_URL].urls if CARD_FILE in url]
+def _module_urls(hass: HomeAssistant) -> list[str]:
+    return [
+        url
+        for url in hass.data[DATA_EXTRA_MODULE_URL].urls
+        if url.startswith("/automation_pause/")
+    ]
 
 
-async def test_card_url_carries_the_version(
+async def test_the_frontend_imports_the_loader_with_the_version(
     hass: HomeAssistant, automations, entry: MockConfigEntry
 ) -> None:
+    """The loader imports the card; the card is not a module of its own."""
     await setup(hass, entry)
-    assert _card_urls(hass) == [f"{CARD_PATH}?v={_version()}"]
+    assert _module_urls(hass) == [f"{LOADER_PATH}?v={_version()}"]
 
 
 async def test_the_card_is_served(
@@ -67,7 +73,7 @@ async def test_a_missing_bundle_does_not_stop_the_setup(
 ) -> None:
     with patch.object(frontend, "CARD_DIR", tmp_path / "missing"):
         await setup(hass, entry)
-    assert _card_urls(hass) == [f"{CARD_PATH}?v={_version()}"]
+    assert _module_urls(hass) == [f"{LOADER_PATH}?v={_version()}"]
     client = await hass_client()
     response = await client.get(CARD_PATH)
     assert response.status == 404
@@ -78,4 +84,4 @@ async def test_a_second_registration_is_ignored(
 ) -> None:
     await setup(hass, entry)
     await frontend.async_register(hass)
-    assert len(_card_urls(hass)) == 1
+    assert len(_module_urls(hass)) == 1

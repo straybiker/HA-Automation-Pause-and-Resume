@@ -1,8 +1,10 @@
 """Serve the card and load it on every page of the frontend.
 
 The integration ships its card in the frontend/ folder. Home Assistant
-serves that folder under /automation_pause, and the frontend loads the card
-as an extra module. So the card works in any dashboard with no manual
+serves that folder under /automation_pause, and the frontend imports the
+loader as an extra module. The loader imports the card and writes a load
+failure to the Home Assistant log; the frontend would only print it to the
+browser console. So the card works in any dashboard with no manual
 resource and no second HACS install.
 
 The URL carries the integration version. The files are served with long
@@ -20,7 +22,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.loader import async_get_integration
 from homeassistant.util.hass_dict import HassKey
 
-from .const import CARD_FILE, CARD_URL_BASE, DOMAIN
+from .const import CARD_URL_BASE, DOMAIN, LOADER_FILE
 
 # The built card. The folder must exist when Home Assistant starts; the file
 # in it is read on each request.
@@ -30,8 +32,8 @@ CARD_DIR = Path(__file__).parent / "frontend"
 _REGISTERED: HassKey[bool] = HassKey(f"{DOMAIN}_frontend")
 
 
-def card_url(version: str) -> str:
-    return f"{CARD_URL_BASE}/{CARD_FILE}?v={version}"
+def loader_url(version: str) -> str:
+    return f"{CARD_URL_BASE}/{LOADER_FILE}?v={version}"
 
 
 async def async_register(hass: HomeAssistant) -> None:
@@ -44,4 +46,4 @@ async def async_register(hass: HomeAssistant) -> None:
     await hass.http.async_register_static_paths(
         [StaticPathConfig(CARD_URL_BASE, str(CARD_DIR), cache_headers=True)]
     )
-    frontend.add_extra_js_url(hass, card_url(str(integration.version)))
+    frontend.add_extra_js_url(hass, loader_url(str(integration.version)))

@@ -199,6 +199,7 @@ The card shows "Custom element doesn't exist: automation-pause-card", or the old
 1. Restart Home Assistant after a HACS download.
 2. Reload the page without the browser cache: Ctrl+F5, or Cmd+Shift+R on a Mac.
 3. In the Companion app: **Settings → Companion app → Debugging → Reset frontend cache**.
+4. Look in **Settings → System → Logs** for "automation-pause-card could not load". The entry names the error and the browser. Add it to an issue.
 
 ### The card says the sensor is not available
 

@@ -40,7 +40,7 @@ mypy                      # strict typing of the integration (pyproject.toml)
 cd frontend-src; npm ci; npm run typecheck; npm run lint; npm test; npm run build
 ```
 
-- The card bundle `custom_components/automation_pause/frontend/automation-pause-card.js` is committed. Rebuild it with `npm run build` after every change in `frontend-src/` and commit both. CI fails when it is not current.
+- The card bundle `custom_components/automation_pause/frontend/automation-pause-card.js` and its loader `automation-pause-loader.js` are committed. The frontend imports the loader. Rebuild it with `npm run build` after every change in `frontend-src/` and commit both. CI fails when it is not current.
 - Releases: bump the version in `manifest.json` and `pyproject.toml` together; tag `v<version>`. See CONTRIBUTING.md.
 - Test report: every release rebuilds `docs/test-report.md` and `.html` and commits them. Run `.venv\Scripts\python.exe scripts/report/collect.py` (all checks locally; Docker and Node) or `collect.py --ci` (the finished CI run of the pushed HEAD), then `scripts/report/build.py`. Raw results go to `build/report/` (git-ignored). Live results are hand-kept in `docs/live-verification.json`. `tests/test_report.py` fails when the report does not name the manifest version.
 - Translations: `strings.json` and `translations/en.json` must stay identical; `translations/nl.json` must have the same keys. `tests/test_translations.py` checks both.

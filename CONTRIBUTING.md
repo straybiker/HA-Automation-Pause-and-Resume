@@ -67,7 +67,7 @@ npm test
 npm run build
 ```
 
-`npm run build` writes `custom_components/automation_pause/frontend/automation-pause-card.js`. Commit that file with the source change: HACS installs it as it is. CI fails when the committed file differs from a fresh build.
+`npm run build` writes `automation-pause-card.js` and `automation-pause-loader.js` in `custom_components/automation_pause/frontend/`. The frontend imports the loader; the loader imports the card and writes a load failure to the Home Assistant log. Commit both files with the source change: HACS installs it as it is. CI fails when the committed file differs from a fresh build.
 
 The card copies the look of Settings → Automations with Home Assistant's CSS variables. It does not use Home Assistant's internal `ha-*` elements, except `ha-icon` for an automation's own icon (with the robot as fallback).
 

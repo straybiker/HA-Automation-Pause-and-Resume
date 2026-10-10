@@ -1,0 +1,4 @@
+/*! automation-pause-card | MIT | https://github.com/straybiker/HA-Automation-Pause-and-Resume | bundles Lit (BSD-3-Clause) and @mdi/js icons (Apache-2.0) */
+var a="automation-pause-card.js";var i=(n,e)=>{let t=n instanceof Error?n:void 0,s=t?`${t.name}: ${t.message}`:String(n),o=(t?.stack??"").split(`
+`).slice(1,4).map(r=>r.trim()).filter(Boolean).join(" | ");return[`automation-pause-card could not load: ${s}`,o&&`at ${o}`,`browser: ${e}`].filter(Boolean).join(`
+`)},c=n=>{let e=new URL(a,n);return e.search=new URL(n).search,e.href},u=()=>document.querySelector("home-assistant")?.hass,d=n=>{let e=Date.now(),t=()=>{let s=u();s?s.callService("system_log","write",{message:n,level:"error",logger:"custom_components.automation_pause.card"}).catch(()=>{}):Date.now()-e<12e4&&setTimeout(t,1e3)};t()};typeof document<"u"&&import(c(import.meta.url)).catch(n=>{let e=i(n,navigator.userAgent);console.error(e),d(e)});export{c as cardUrl,i as loadErrorMessage};

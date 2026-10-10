@@ -27,7 +27,11 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD = ROOT / "build" / "report"
 FRONTEND = ROOT / "frontend-src"
 INTEGRATION = ROOT / "custom_components" / "automation_pause"
-BUNDLE = INTEGRATION / "frontend" / "automation-pause-card.js"
+# The build output: the card and the loader that the frontend imports.
+BUNDLES = tuple(
+    INTEGRATION / "frontend" / name
+    for name in ("automation-pause-card.js", "automation-pause-loader.js")
+)
 
 # Image, Dockerfile and requirements file per Home Assistant release, as in
 # scripts/test-ha.ps1 and the pytest matrix of .github/workflows/test.yml.
@@ -310,9 +314,9 @@ def local_frontend() -> tuple[dict, dict]:
     else:
         vitest["error"] = "vitest wrote no JUnit file"
 
-    before = BUNDLE.read_bytes() if BUNDLE.is_file() else b""
+    before = [path.read_bytes() if path.is_file() else b"" for path in BUNDLES]
     build = npm("run", "build")
-    after = BUNDLE.read_bytes() if BUNDLE.is_file() else b""
+    after = [path.read_bytes() if path.is_file() else b"" for path in BUNDLES]
     if build.returncode != 0:
         tools["bundle"] = check("fail", f"npm run build failed: {last_line(build)}")
     elif before == after:
@@ -323,8 +327,9 @@ def local_frontend() -> tuple[dict, dict]:
         )
     # Collecting must not change tracked files; the developer rebuilds on purpose.
     # Restore only our own build output, never a bundle written meanwhile.
-    if before != after and BUNDLE.read_bytes() == after:
-        BUNDLE.write_bytes(before)
+    for path, old, new in zip(BUNDLES, before, after, strict=True):
+        if old != new and path.is_file() and path.read_bytes() == new:
+            path.write_bytes(old)
     return vitest, tools
 
 

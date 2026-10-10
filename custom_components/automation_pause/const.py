@@ -39,6 +39,8 @@ ATTR_RESUME_AT = "resume_at"
 # The card the integration serves itself, so no manual dashboard resource.
 CARD_ELEMENT = "automation-pause-card"
 CARD_FILE = f"{CARD_ELEMENT}.js"
+# What the frontend imports: it loads the card and logs a load failure.
+LOADER_FILE = "automation-pause-loader.js"
 CARD_URL_BASE = f"/{DOMAIN}"
 
 # The dashboard in the sidebar.

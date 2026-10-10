@@ -72,6 +72,7 @@ custom_components/automation_pause/
                      dependencies: automation, http, frontend
                      after_dependencies: lovelace
   frontend/automation-pause-card.js    built bundle, committed
+  frontend/automation-pause-loader.js  loads the card, logs a load failure
 frontend-src/        TypeScript + Lit + esbuild, vitest
 tests/  tests/ha/
 scripts/test-ha.ps1  ha-tests.Dockerfile
