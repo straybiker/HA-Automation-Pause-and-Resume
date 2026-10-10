@@ -36,7 +36,7 @@ pytest runs the same suite twice: with the newest Home Assistant (`requirements-
 
 By hand on a live Home Assistant, with the steps in [PLAN.md](PLAN.md#verification-live-ha). The data is in `docs/live-verification.json`.
 
-Release **0.1.0-beta.4** (this release) · Home Assistant 2026.9.1 · 10/10/2026 · 5 pass
+Release **0.1.0-beta.4** (this release) · Home Assistant 2026.9.1 · 10/10/2026 · 8 pass
 
 | Step | Check | Result | Note |
 |---|---|---|---|
@@ -45,6 +45,9 @@ Release **0.1.0-beta.4** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | app | The dashboard works in the Android Companion app. | ✅ pass | Failed with 0.1.0-beta.2 and 0.1.0-beta.3 (Custom element doesn't exist), also after a reset of the frontend cache. Works with 0.1.0-beta.4. |
 | phone-browser | The dashboard works in Chrome on a phone. | ✅ pass | – |
 | theme | The dashboard follows a card-mod theme (Frosted Glass): background image and glass card. | ✅ pass | – |
+| 1 | The dashboard is in the sidebar. Its list matches Settings → Automations side by side, in the light and the dark theme. | ✅ pass | – |
+| 11 | Search narrows the list. Sort by last run puts the newest first. A new automation appears with no configuration. | ✅ pass | – |
+| 13 | Phone width: no horizontal scroll, the chips are easy to tap. | ✅ pass | – |
 
 ## pytest
 

@@ -186,6 +186,24 @@
           "check": "The dashboard follows a card-mod theme (Frosted Glass): background image and glass card.",
           "result": "pass",
           "note": ""
+        },
+        {
+          "step": "1",
+          "check": "The dashboard is in the sidebar. Its list matches Settings → Automations side by side, in the light and the dark theme.",
+          "result": "pass",
+          "note": ""
+        },
+        {
+          "step": "11",
+          "check": "Search narrows the list. Sort by last run puts the newest first. A new automation appears with no configuration.",
+          "result": "pass",
+          "note": ""
+        },
+        {
+          "step": "13",
+          "check": "Phone width: no horizontal scroll, the chips are easy to tap.",
+          "result": "pass",
+          "note": ""
         }
       ]
     }
