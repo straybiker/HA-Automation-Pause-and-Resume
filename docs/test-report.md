@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| Integration version | 0.1.0-beta.4 |
-| Commit | `3aa112b` on `main` |
+| Integration version | 1.0.0 |
+| Commit | `76d6a77` on `main` |
 | Date | 10/10/2026 |
 | Results | local Docker run |
 | Supported Home Assistant | 2026.9.0 or later |
@@ -34,9 +34,11 @@ pytest runs the same suite twice: with the newest Home Assistant (`requirements-
 
 ## Live verification
 
+No live run for 1.0.0 yet. This is the newest run, for release 0.1.0-beta.4.
+
 By hand on a live Home Assistant, with the steps in [PLAN.md](PLAN.md#verification-live-ha). The data is in `docs/live-verification.json`.
 
-Release **0.1.0-beta.4** (this release) · Home Assistant 2026.9.1 · 10/10/2026 · 9 pass
+Release **0.1.0-beta.4** · Home Assistant 2026.9.1 · 10/10/2026 · 11 pass
 
 | Step | Check | Result | Note |
 |---|---|---|---|
@@ -49,6 +51,8 @@ Release **0.1.0-beta.4** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | 11 | Search narrows the list. Sort by last run puts the newest first. A new automation appears with no configuration. | ✅ pass | – |
 | 13 | Phone width: no horizontal scroll, the chips are easy to tap. | ✅ pass | – |
 | removed | Deleting a paused automation ends its pause (reason removed). | ✅ pass | The sensor dropped the deleted automation at once. |
+| card | Closing the pause dialog raises no error in Home Assistant. | ✅ pass | Opened and closed without a pause; the system log has no frontend error. |
+| icons | The list shows each automation's own icon. | ✅ pass | – |
 
 ## pytest
 
