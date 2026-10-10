@@ -4,8 +4,6 @@ Pause any Home Assistant automation for a set time. It turns on again by itself.
 
 Home Assistant has no "turn off for 1 hour". `automation.turn_off` lasts until someone turns the automation on again. This integration adds that time limit, with no helper, script or edit per automation.
 
-Status: beta, in development. The build plan is in [docs/PLAN.md](docs/PLAN.md).
-
 ## Features
 
 - Pause any automation for a duration from the list or a custom time (1 minute to 365 days). The list is 15 minutes, 1 hour, 1 day and 1 week; you can change it under Options.
@@ -25,8 +23,10 @@ Status: beta, in development. The build plan is in [docs/PLAN.md](docs/PLAN.md).
 
 ## Install (HACS)
 
-1. HACS → three-dot menu → **Custom repositories** → add `https://github.com/straybiker/HA-Automation-Pause-and-Resume`, category **Integration**.
-2. Download it. A beta version (`0.x.y-beta.N`) needs **Show beta versions** on.
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=straybiker&repository=HA-Automation-Pause-and-Resume&category=integration)
+
+1. Click the button above. Or: HACS → three-dot menu → **Custom repositories** → add `https://github.com/straybiker/HA-Automation-Pause-and-Resume`, category **Integration**.
+2. Download it.
 3. Restart Home Assistant.
 4. **Settings → Devices & services → Add integration → Automation Pause and Resume.**
 
