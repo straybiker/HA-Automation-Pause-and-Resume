@@ -4,9 +4,9 @@
 
 | | |
 |---|---|
-| Integration version | 0.1.0-beta.2 |
-| Commit | `e5ef42f` on `main` |
-| Date | 09/10/2026 |
+| Integration version | 0.1.0-beta.3 |
+| Commit | `26a688d` on `main` |
+| Date | 10/10/2026 |
 | Results | local Docker run |
 | Supported Home Assistant | 2026.9.0 or later |
 
@@ -18,15 +18,15 @@ The same report as a page: [test-report.html](test-report.html). GitHub shows th
 
 | Check | Passed | Failed | Skipped | Result | Detail |
 |---|--:|--:|--:|---|---|
-| pytest, newest Home Assistant 2026.10.0 | 108 | 0 | 0 | ✅ pass | requirements-dev.txt: 88 Home Assistant tests, 20 static tests |
-| pytest, oldest supported Home Assistant 2026.9.4 | 108 | 0 | 0 | ✅ pass | requirements-dev-oldest.txt: 88 Home Assistant tests, 20 static tests |
-| Card: vitest | 41 | 0 | 0 | ✅ pass | Node v24.11.1 |
+| pytest, newest Home Assistant 2026.10.0 | 158 | 0 | 0 | ✅ pass | requirements-dev.txt: 96 Home Assistant tests, 62 static tests |
+| pytest, oldest supported Home Assistant 2026.9.4 | 158 | 0 | 0 | ✅ pass | requirements-dev-oldest.txt: 96 Home Assistant tests, 62 static tests |
+| Card: vitest | 49 | 0 | 0 | ✅ pass | Node v24.11.1 |
 | Card: typecheck (tsc) | – | – | – | ✅ pass | no type errors |
 | Card: eslint and prettier | – | – | – | ✅ pass | eslint: no problems; prettier: all files formatted |
 | Card: bundle equals a fresh build | – | – | – | ✅ pass | the committed bundle equals a fresh build |
 | ruff check | – | – | – | ✅ pass | All checks passed! |
-| ruff format | – | – | – | ✅ pass | 37 files already formatted |
-| mypy --strict | – | – | – | ✅ pass | Success: no issues found in 11 source files |
+| ruff format | – | – | – | ✅ pass | 39 files already formatted |
+| mypy --strict | – | – | – | ✅ pass | Success: no issues found in 12 source files |
 | hassfest | – | – | – | ✅ pass | valid |
 | HACS validation | – | – | – | ➖ not run | not run locally: only CI runs it, in validate.yml |
 
@@ -34,9 +34,11 @@ pytest runs the same suite twice: with the newest Home Assistant (`requirements-
 
 ## Live verification
 
+No live run for 0.1.0-beta.3 yet. This is the newest run, for release 0.1.0-beta.2.
+
 By hand on a live Home Assistant, with the steps in [PLAN.md](PLAN.md#verification-live-ha). The data is in `docs/live-verification.json`.
 
-Release **0.1.0-beta.2** (this release) · Home Assistant 2026.9.1 · 10/10/2026 · 3 pass, 6 open
+Release **0.1.0-beta.2** · Home Assistant 2026.9.1 · 10/10/2026 · 3 pass, 6 open
 
 | Step | Check | Result | Note |
 |---|---|---|---|
@@ -131,6 +133,8 @@ Release **0.1.0-beta.2** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | The sensor entity. | – | ✅ pass | ✅ pass |
 | The sensor belongs to a service device. | – | ✅ pass | ✅ pass |
 | An older install keeps its entity id.<br>*The registry keeps the entity ID that the sensor had before.* | – | ✅ pass | ✅ pass |
+| The sensor lists the durations.<br>*In minutes, for the card. The defaults until the options set a list.* | – | ✅ pass | ✅ pass |
+| The recorder skips the durations.<br>*A setting, not a pause: no copy in every history row.* | – | ✅ pass | ✅ pass |
 
 ### Diagnostics and logbook
 
@@ -152,6 +156,11 @@ Release **0.1.0-beta.2** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | A second flow aborts. | – | ✅ pass | ✅ pass |
 | Options flow shows the current choice. | – | ✅ pass | ✅ pass |
 | Options flow clears the name. | – | ✅ pass | ✅ pass |
+| Options flow shows the default durations.<br>*A new install, or an older one, has no durations option yet.* | – | ✅ pass | ✅ pass |
+| Options flow shows the stored durations. | – | ✅ pass | ✅ pass |
+| Options flow normalizes the durations.<br>*Sorted, each length of time once, in the largest whole unit.* | – | ✅ pass | ✅ pass |
+| Options flow keeps an empty list.<br>*No durations: the card shows only Custom.* | – | ✅ pass | ✅ pass |
+| Options flow rejects a bad duration. | – | ✅ pass | ✅ pass |
 
 ### Sidebar dashboard
 
@@ -164,6 +173,7 @@ Release **0.1.0-beta.2** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | Unload removes the panel. | – | ✅ pass | ✅ pass |
 | Edits survive a reload. | – | ✅ pass | ✅ pass |
 | Rebuild discards the edits. | – | ✅ pass | ✅ pass |
+| No rebuild when the form has an error.<br>*The rebuild deletes the dashboard at once, so a bad duration must stop it first: the user can still cancel the form.* | – | ✅ pass | ✅ pass |
 | Rebuild without other changes.<br>*Home Assistant reloads only when the options change; a rebuild alone must still build the dashboard again.* | – | ✅ pass | ✅ pass |
 | Option adds and removes the dashboard later. | – | ✅ pass | ✅ pass |
 | Option off deletes the edits. | – | ✅ pass | ✅ pass |
@@ -219,6 +229,7 @@ Release **0.1.0-beta.2** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | Placeholders match english.<br>*A missing placeholder shows as raw text in the message.* | en | ✅ pass | ✅ pass |
 | Placeholders match english.<br>*A missing placeholder shows as raw text in the message.* | nl | ✅ pass | ✅ pass |
 | Every exception has text. | – | ✅ pass | ✅ pass |
+| Every options error has text.<br>*Only the options flow validates input, so its errors live in options.error. The setup flow has no error to show.* | – | ✅ pass | ✅ pass |
 
 ### tests/ha/test_notification.py
 
@@ -233,6 +244,54 @@ Release **0.1.0-beta.2** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | A manual turn on shows none. | – | ✅ pass | ✅ pass |
 | Unload stops the notifications. | – | ✅ pass | ✅ pass |
 | An automation without a state uses its entity id. | – | ✅ pass | ✅ pass |
+
+### tests/test_durations.py
+
+`tests/test_durations.py` · Static
+
+| Test | Case | Newest (2026.10.0) | Oldest (2026.9.4) |
+|---|---|---|---|
+| Parse. | 1m-1 | ✅ pass | ✅ pass |
+| Parse. | 45m-45 | ✅ pass | ✅ pass |
+| Parse. | 2h-120 | ✅ pass | ✅ pass |
+| Parse. | 3d-4320 | ✅ pass | ✅ pass |
+| Parse. | 2w-20160 | ✅ pass | ✅ pass |
+| Parse. | 365d-525600 | ✅ pass | ✅ pass |
+| Parse. | 2H-120 | ✅ pass | ✅ pass |
+| Parse. |  1 w -10080 | ✅ pass | ✅ pass |
+| Parse. | 007m-7 | ✅ pass | ✅ pass |
+| Parse rejects. | – | ✅ pass | ✅ pass |
+| Parse rejects. | m | ✅ pass | ✅ pass |
+| Parse rejects. | 15 | ✅ pass | ✅ pass |
+| Parse rejects. | 15s | ✅ pass | ✅ pass |
+| Parse rejects. | 1.5h | ✅ pass | ✅ pass |
+| Parse rejects. | -5m | ✅ pass | ✅ pass |
+| Parse rejects. | 1h30m | ✅ pass | ✅ pass |
+| Parse rejects. | 1 5m | ✅ pass | ✅ pass |
+| Parse rejects. | 15 minutes | ✅ pass | ✅ pass |
+| Parse rejects. | 0m | ✅ pass | ✅ pass |
+| Parse rejects. | 0w | ✅ pass | ✅ pass |
+| Parse rejects. | 366d | ✅ pass | ✅ pass |
+| Parse rejects. | 53w | ✅ pass | ✅ pass |
+| Parse rejects. | 525601m | ✅ pass | ✅ pass |
+| Parse rejects. | 99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999m | ✅ pass | ✅ pass |
+| Parse rejects. | \u0661\u0665m | ✅ pass | ✅ pass |
+| Bounds match the action. | – | ✅ pass | ✅ pass |
+| Format takes the largest whole unit. | 1-1m | ✅ pass | ✅ pass |
+| Format takes the largest whole unit. | 90-90m | ✅ pass | ✅ pass |
+| Format takes the largest whole unit. | 60-1h | ✅ pass | ✅ pass |
+| Format takes the largest whole unit. | 1500-25h | ✅ pass | ✅ pass |
+| Format takes the largest whole unit. | 1440-1d | ✅ pass | ✅ pass |
+| Format takes the largest whole unit. | 10080-1w | ✅ pass | ✅ pass |
+| Format takes the largest whole unit. | 525600-365d | ✅ pass | ✅ pass |
+| Format takes the largest whole unit. | 524160-52w | ✅ pass | ✅ pass |
+| Normalize sorts and merges. | – | ✅ pass | ✅ pass |
+| Normalize rejects one bad value. | – | ✅ pass | ✅ pass |
+| To minutes. | – | ✅ pass | ✅ pass |
+| The choices are valid and normal. | – | ✅ pass | ✅ pass |
+| Every choice has a label. | path0 | ✅ pass | ✅ pass |
+| Every choice has a label. | path1 | ✅ pass | ✅ pass |
+| Every choice has a label. | path2 | ✅ pass | ✅ pass |
 
 ### tests/test_quality_scale.py
 
@@ -277,7 +336,11 @@ Release **0.1.0-beta.2** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | relative time | Adds the year only for another year. | ✅ pass |
 | relative time | Uses the clock of the language by default. | ✅ pass |
 | relative time | Reads the HA profile options. | ✅ pass |
-| durations | Has the four presets in the user's language. | ✅ pass |
+| durations | Reads the list of the sensor in minutes, sorted, each once. | ✅ pass |
+| durations | Skips bad entries in the list. | ✅ pass |
+| durations | Uses the default list without the attribute. | ✅ pass |
+| durations | Labels each duration with the largest whole unit. | ✅ pass |
+| durations | Accepts every default duration. | ✅ pass |
 | durations | Parses custom values. | ✅ pass |
 | durations | Rejects text that is not a number. | ✅ pass |
 | durations | Keeps the bounds of 1 minute to 365 days. | ✅ pass |
@@ -296,3 +359,12 @@ Release **0.1.0-beta.2** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | strings | Picks the language and falls back to English. | ✅ pass |
 | strings | Has the same keys in both languages. | ✅ pass |
 | strings | Fills placeholders. | ✅ pass |
+
+### `frontend-src/test/view.test.ts`
+
+| Area | Test | Result |
+|---|---|---|
+| stored view | Restores a stored sort and filter. | ✅ pass |
+| stored view | Uses the defaults when nothing is stored. | ✅ pass |
+| stored view | Uses the defaults for damaged data. | ✅ pass |
+| stored view | Replaces only the values it does not know. | ✅ pass |
