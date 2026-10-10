@@ -378,7 +378,9 @@ if (!window.customCards.some((card) => card.type === CARD_TYPE)) {
     type: CARD_TYPE,
     name: strings.card_name,
     description: strings.card_description,
-    preview: true,
+    // A live preview would draw the whole automation list in the small
+    // picker tile; the name and description say enough there.
+    preview: false,
     documentationURL:
       "https://github.com/straybiker/HA-Automation-Pause-and-Resume",
   });

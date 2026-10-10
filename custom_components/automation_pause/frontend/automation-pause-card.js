@@ -1180,7 +1180,7 @@ var r5=Object.defineProperty;var e5=Object.getOwnPropertyDescriptor;var o=(L,H,C
       .alert {
         margin: 8px 16px;
       }
-    `],o([m({attribute:!1})],P.prototype,"hass",2),o([Z()],P.prototype,"_config",2),o([Z()],P.prototype,"_now",2),o([Z()],P.prototype,"_dialogEntityId",2),o([Z()],P.prototype,"_dialogBusy",2),o([Z()],P.prototype,"_dialogError",2);b(g1,P);window.customCards=window.customCards||[];if(!window.customCards.some(L=>L.type===g1)){let L=S1(navigator.language);window.customCards.push({type:g1,name:L.card_name,description:L.card_description,preview:!0,documentationURL:"https://github.com/straybiker/HA-Automation-Pause-and-Resume"})}export{P as AutomationPauseCard};
+    `],o([m({attribute:!1})],P.prototype,"hass",2),o([Z()],P.prototype,"_config",2),o([Z()],P.prototype,"_now",2),o([Z()],P.prototype,"_dialogEntityId",2),o([Z()],P.prototype,"_dialogBusy",2),o([Z()],P.prototype,"_dialogError",2);b(g1,P);window.customCards=window.customCards||[];if(!window.customCards.some(L=>L.type===g1)){let L=S1(navigator.language);window.customCards.push({type:g1,name:L.card_name,description:L.card_description,preview:!1,documentationURL:"https://github.com/straybiker/HA-Automation-Pause-and-Resume"})}export{P as AutomationPauseCard};
 /*! Bundled license information:
 
 @lit/reactive-element/css-tag.js:
