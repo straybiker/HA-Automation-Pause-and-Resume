@@ -34,23 +34,17 @@ pytest runs the same suite twice: with the newest Home Assistant (`requirements-
 
 ## Live verification
 
-No live run for 0.1.0-beta.4 yet. This is the newest run, for release 0.1.0-beta.2.
-
 By hand on a live Home Assistant, with the steps in [PLAN.md](PLAN.md#verification-live-ha). The data is in `docs/live-verification.json`.
 
-Release **0.1.0-beta.2** · Home Assistant 2026.9.1 · 10/10/2026 · 3 pass, 6 open
+Release **0.1.0-beta.4** (this release) · Home Assistant 2026.9.1 · 10/10/2026 · 5 pass
 
 | Step | Check | Result | Note |
 |---|---|---|---|
-| upgrade | Update from 0.1.0-beta.1 through HACS and restart: the pauses stay. | ✅ pass | A pause made before the update was still there after the restart, with its end time. |
-| sensor | An existing install keeps its sensor entity ID; the sensor gets the service device. | ✅ pass | The entity ID stayed the same; the name now starts with the device name. |
-| notify | With Notify when a pause ends: the timer end shows a notification. | ✅ pass | The notification appeared at the same second as the turn-on. |
-| card | Closing the pause dialog raises no error in Home Assistant. | ⏳ open | One error was logged after the update. Its position matches the 0.1.0-beta.1 card: a browser tab open since before the update still ran the old code. Check again after a reload. |
-| admin | Admin only hides the dashboard from users who are not administrators. | ⏳ open | – |
-| icons | The list shows each automation's own icon. | ⏳ open | – |
-| 1 | The dashboard is in the sidebar. Its list matches Settings → Automations side by side, in the light and the dark theme. | ⏳ open | – |
-| 11 | Search narrows the list. Sort by last run puts the newest first. A new automation appears with no configuration. | ⏳ open | – |
-| 13 | Phone width: no horizontal scroll, the chips are easy to tap. | ⏳ open | – |
+| upgrade | Update from 0.1.0-beta.3 through HACS and restart: the pauses and options stay. | ✅ pass | Three pauses and the configured durations were unchanged after the restart. |
+| loader | The frontend imports the loader, and the loader loads the card. | ✅ pass | The page imports the loader with the version query. No load failure was logged. |
+| app | The dashboard works in the Android Companion app. | ✅ pass | Failed with 0.1.0-beta.2 and 0.1.0-beta.3 (Custom element doesn't exist), also after a reset of the frontend cache. Works with 0.1.0-beta.4. |
+| phone-browser | The dashboard works in Chrome on a phone. | ✅ pass | – |
+| theme | The dashboard follows a card-mod theme (Frosted Glass): background image and glass card. | ✅ pass | – |
 
 ## pytest
 

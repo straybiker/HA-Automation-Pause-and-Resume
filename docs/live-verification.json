@@ -151,6 +151,43 @@
           "note": ""
         }
       ]
+    },
+    {
+      "release": "0.1.0-beta.4",
+      "home_assistant": "2026.9.1",
+      "date": "10/10/2026",
+      "steps": [
+        {
+          "step": "upgrade",
+          "check": "Update from 0.1.0-beta.3 through HACS and restart: the pauses and options stay.",
+          "result": "pass",
+          "note": "Three pauses and the configured durations were unchanged after the restart."
+        },
+        {
+          "step": "loader",
+          "check": "The frontend imports the loader, and the loader loads the card.",
+          "result": "pass",
+          "note": "The page imports the loader with the version query. No load failure was logged."
+        },
+        {
+          "step": "app",
+          "check": "The dashboard works in the Android Companion app.",
+          "result": "pass",
+          "note": "Failed with 0.1.0-beta.2 and 0.1.0-beta.3 (Custom element doesn't exist), also after a reset of the frontend cache. Works with 0.1.0-beta.4."
+        },
+        {
+          "step": "phone-browser",
+          "check": "The dashboard works in Chrome on a phone.",
+          "result": "pass",
+          "note": ""
+        },
+        {
+          "step": "theme",
+          "check": "The dashboard follows a card-mod theme (Frosted Glass): background image and glass card.",
+          "result": "pass",
+          "note": ""
+        }
+      ]
     }
   ]
 }
