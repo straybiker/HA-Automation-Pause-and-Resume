@@ -204,6 +204,12 @@
           "check": "Phone width: no horizontal scroll, the chips are easy to tap.",
           "result": "pass",
           "note": ""
+        },
+        {
+          "step": "removed",
+          "check": "Deleting a paused automation ends its pause (reason removed).",
+          "result": "pass",
+          "note": "The sensor dropped the deleted automation at once."
         }
       ]
     }

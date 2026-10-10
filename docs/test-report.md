@@ -36,7 +36,7 @@ pytest runs the same suite twice: with the newest Home Assistant (`requirements-
 
 By hand on a live Home Assistant, with the steps in [PLAN.md](PLAN.md#verification-live-ha). The data is in `docs/live-verification.json`.
 
-Release **0.1.0-beta.4** (this release) · Home Assistant 2026.9.1 · 10/10/2026 · 8 pass
+Release **0.1.0-beta.4** (this release) · Home Assistant 2026.9.1 · 10/10/2026 · 9 pass
 
 | Step | Check | Result | Note |
 |---|---|---|---|
@@ -48,6 +48,7 @@ Release **0.1.0-beta.4** (this release) · Home Assistant 2026.9.1 · 10/10/2026
 | 1 | The dashboard is in the sidebar. Its list matches Settings → Automations side by side, in the light and the dark theme. | ✅ pass | – |
 | 11 | Search narrows the list. Sort by last run puts the newest first. A new automation appears with no configuration. | ✅ pass | – |
 | 13 | Phone width: no horizontal scroll, the chips are easy to tap. | ✅ pass | – |
+| removed | Deleting a paused automation ends its pause (reason removed). | ✅ pass | The sensor dropped the deleted automation at once. |
 
 ## pytest
 
