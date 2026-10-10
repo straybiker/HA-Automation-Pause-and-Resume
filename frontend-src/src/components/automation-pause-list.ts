@@ -15,7 +15,7 @@ import {
 } from "@mdi/js";
 import { define } from "../define";
 import type { DateTimeOptions } from "../logic";
-import { filterItems, sortItems } from "../logic";
+import { filterItems, parseView, sortItems } from "../logic";
 import type { Strings } from "../strings";
 import { formatString } from "../strings";
 import {
@@ -33,6 +33,17 @@ import type {
 import "./automation-pause-menu";
 import type { RowLayout } from "./automation-pause-row";
 import "./automation-pause-row";
+
+// Per browser, like the sort and filters of the built-in automation list.
+const VIEW_STORAGE_KEY = "automation-pause-card.view";
+
+const loadView = (): ReturnType<typeof parseView> => {
+  try {
+    return parseView(localStorage.getItem(VIEW_STORAGE_KEY));
+  } catch {
+    return parseView(null);
+  }
+};
 
 // Below this width the list uses the phone layout of ha-data-table.
 const NARROW_WIDTH = 600;
@@ -63,9 +74,9 @@ export class AutomationPauseList extends LitElement {
 
   @state() private _search = "";
 
-  @state() private _status: StatusFilter = "all";
+  @state() private _status: StatusFilter = loadView().status;
 
-  @state() private _sort: SortKey = "last_triggered";
+  @state() private _sort: SortKey = loadView().sort;
 
   @state() private _layout: RowLayout = "wide";
 
@@ -327,6 +338,18 @@ export class AutomationPauseList extends LitElement {
     } else if (this._openMenu === "sort") {
       this._sort = ev.detail.value as SortKey;
     }
+    this._saveView();
+  }
+
+  private _saveView(): void {
+    try {
+      localStorage.setItem(
+        VIEW_STORAGE_KEY,
+        JSON.stringify({ sort: this._sort, status: this._status })
+      );
+    } catch {
+      // Private windows can block storage; the list still works without it.
+    }
   }
 
   private _handleMenuClosed(ev: Event): void {
@@ -336,6 +359,7 @@ export class AutomationPauseList extends LitElement {
 
   private _handleTitleClick(ev: Event): void {
     this._sort = (ev.currentTarget as HTMLButtonElement).value as SortKey;
+    this._saveView();
   }
 
   private _handleSearch(ev: Event): void {

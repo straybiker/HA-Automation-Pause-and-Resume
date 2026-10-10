@@ -556,3 +556,41 @@ export const errorText = (err: unknown, strings: Strings): string => {
   }
   return strings.error_unknown;
 };
+
+/** The list's sort and status filter, kept per browser as the built-in list does. */
+export interface ViewState {
+  sort: SortKey;
+  status: StatusFilter;
+}
+
+export const DEFAULT_VIEW: ViewState = {
+  sort: "last_triggered",
+  status: "all",
+};
+
+const SORT_KEYS: readonly SortKey[] = ["last_triggered", "name", "state"];
+const STATUS_FILTERS: readonly StatusFilter[] = [
+  "all",
+  "enabled",
+  "disabled",
+  "paused",
+];
+
+/** A stored view, or the default for each value that is missing or unknown. */
+export const parseView = (raw: string | null | undefined): ViewState => {
+  let data: unknown;
+  try {
+    data = JSON.parse(raw ?? "null");
+  } catch {
+    return DEFAULT_VIEW;
+  }
+  const value = (data ?? {}) as Partial<Record<keyof ViewState, unknown>>;
+  return {
+    sort: SORT_KEYS.includes(value.sort as SortKey)
+      ? (value.sort as SortKey)
+      : DEFAULT_VIEW.sort,
+    status: STATUS_FILTERS.includes(value.status as StatusFilter)
+      ? (value.status as StatusFilter)
+      : DEFAULT_VIEW.status,
+  };
+};

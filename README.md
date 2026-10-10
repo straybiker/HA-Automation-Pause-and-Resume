@@ -45,6 +45,8 @@ Open the dashboard. Click an automation, or use **Pause…** in its ⋮ menu, an
 
 To turn the automation on before the end, use **Resume now** or the normal switch. A manual turn-on ends the pause.
 
+The list remembers its sort and filter in each browser, as Settings → Automations does. The search starts empty.
+
 The card `custom:automation-pause-card` also works in any other dashboard:
 
 ```yaml
