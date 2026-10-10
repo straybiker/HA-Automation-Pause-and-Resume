@@ -34,28 +34,21 @@ pytest runs the same suite twice: with the newest Home Assistant (`requirements-
 
 ## Live verification
 
-No live run for 0.1.0-beta.2 yet. This is the newest run, for release 0.1.0-beta.1.
-
 By hand on a live Home Assistant, with the steps in [PLAN.md](PLAN.md#verification-live-ha). The data is in `docs/live-verification.json`.
 
-Release **0.1.0-beta.1** · Home Assistant 2026.9.1 · 09/10/2026 · 10 pass, 1 fail, 3 open
+Release **0.1.0-beta.2** (this release) · Home Assistant 2026.9.1 · 10/10/2026 · 3 pass, 6 open
 
 | Step | Check | Result | Note |
 |---|---|---|---|
+| upgrade | Update from 0.1.0-beta.1 through HACS and restart: the pauses stay. | ✅ pass | A pause made before the update was still there after the restart, with its end time. |
+| sensor | An existing install keeps its sensor entity ID; the sensor gets the service device. | ✅ pass | The entity ID stayed the same; the name now starts with the device name. |
+| notify | With Notify when a pause ends: the timer end shows a notification. | ✅ pass | The notification appeared at the same second as the turn-on. |
+| card | Closing the pause dialog raises no error in Home Assistant. | ⏳ open | One error was logged after the update. Its position matches the 0.1.0-beta.1 card: a browser tab open since before the update still ran the old code. Check again after a reload. |
+| admin | Admin only hides the dashboard from users who are not administrators. | ⏳ open | – |
+| icons | The list shows each automation's own icon. | ⏳ open | – |
 | 1 | The dashboard is in the sidebar. Its list matches Settings → Automations side by side, in the light and the dark theme. | ⏳ open | – |
-| 2 | Pause 15 min from the card: the automation is off, the sensor lists it, the countdown runs. | ✅ pass | – |
-| 3 | The end of the timer turns the automation on (reason timer). | ✅ pass | On time to 10 ms. The logbook stays empty on that system because its recorder excludes the automation domain. |
-| 4 | Pause again while paused: new end time, the start time stays, one entry. | ✅ pass | – |
-| 5 | Resume now turns the automation on at once. | ✅ pass | – |
-| 6 | A manual turn-on ends the pause. The old timer does not turn the automation on later. | ✅ pass | – |
-| 7 | Restart during a pause: the automation stays off, the countdown continues. | ✅ pass | The timer fired on time after the restart. |
-| 8 | The end time passes while Home Assistant is down: the automation resumes at startup. | ✅ pass | Resumed when startup finished. |
-| 9 | Reload of a changed automation during a pause: the pause stays. | ✅ pass | – |
-| 10 | Automation without id: a clear error, nothing changes. | ✅ pass | The REST API reports HTTP 500 for a validation error. The websocket path that the card uses returns the translated message. |
 | 11 | Search narrows the list. Sort by last run puts the newest first. A new automation appears with no configuration. | ⏳ open | – |
-| 12 | Dashboard edits survive an integration reload. Rebuild the dashboard resets them. | ✅ pass | – |
 | 13 | Phone width: no horizontal scroll, the chips are easy to tap. | ⏳ open | – |
-| card | Closing the pause dialog raises no error in Home Assistant. | ❌ fail | A TypeError in Home Assistant's quick bar: the card's internal event had Home Assistant's name dialog-closed. Fixed in the next release: the card's internal events have the prefix automation-pause-. |
 
 ## pytest
 

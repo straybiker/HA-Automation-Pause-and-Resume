@@ -90,6 +90,67 @@
           "note": "A TypeError in Home Assistant's quick bar: the card's internal event had Home Assistant's name dialog-closed. Fixed in the next release: the card's internal events have the prefix automation-pause-."
         }
       ]
+    },
+    {
+      "release": "0.1.0-beta.2",
+      "home_assistant": "2026.9.1",
+      "date": "10/10/2026",
+      "steps": [
+        {
+          "step": "upgrade",
+          "check": "Update from 0.1.0-beta.1 through HACS and restart: the pauses stay.",
+          "result": "pass",
+          "note": "A pause made before the update was still there after the restart, with its end time."
+        },
+        {
+          "step": "sensor",
+          "check": "An existing install keeps its sensor entity ID; the sensor gets the service device.",
+          "result": "pass",
+          "note": "The entity ID stayed the same; the name now starts with the device name."
+        },
+        {
+          "step": "notify",
+          "check": "With Notify when a pause ends: the timer end shows a notification.",
+          "result": "pass",
+          "note": "The notification appeared at the same second as the turn-on."
+        },
+        {
+          "step": "card",
+          "check": "Closing the pause dialog raises no error in Home Assistant.",
+          "result": "open",
+          "note": "One error was logged after the update. Its position matches the 0.1.0-beta.1 card: a browser tab open since before the update still ran the old code. Check again after a reload."
+        },
+        {
+          "step": "admin",
+          "check": "Admin only hides the dashboard from users who are not administrators.",
+          "result": "open",
+          "note": ""
+        },
+        {
+          "step": "icons",
+          "check": "The list shows each automation's own icon.",
+          "result": "open",
+          "note": ""
+        },
+        {
+          "step": "1",
+          "check": "The dashboard is in the sidebar. Its list matches Settings → Automations side by side, in the light and the dark theme.",
+          "result": "open",
+          "note": ""
+        },
+        {
+          "step": "11",
+          "check": "Search narrows the list. Sort by last run puts the newest first. A new automation appears with no configuration.",
+          "result": "open",
+          "note": ""
+        },
+        {
+          "step": "13",
+          "check": "Phone width: no horizontal scroll, the chips are easy to tap.",
+          "result": "open",
+          "note": ""
+        }
+      ]
     }
   ]
 }
