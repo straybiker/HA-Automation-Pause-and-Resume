@@ -396,10 +396,8 @@ export class AutomationPauseRow extends LitElement {
         height: var(--data-table-row-height, 60px);
         border-top: 1px solid var(--divider-color);
         color: var(--primary-text-color);
-        background-color: var(
-          --data-table-background-color,
-          var(--card-background-color)
-        );
+        /* The ha-card behind the rows paints the surface. */
+        background-color: transparent;
         font-family: var(--ha-font-family-body, Roboto, Noto, sans-serif);
         -webkit-font-smoothing: var(--ha-font-smoothing, antialiased);
         -moz-osx-font-smoothing: var(--ha-moz-osx-font-smoothing, grayscale);

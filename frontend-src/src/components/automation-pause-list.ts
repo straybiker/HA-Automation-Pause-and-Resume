@@ -154,7 +154,7 @@ export class AutomationPauseList extends LitElement {
               ${this._renderFilterChip()}${this._renderSearch()}${this._renderSortChip()}
             </div>`
       }
-      <div class="table" role="table" aria-rowcount=${rows.length + 1}>
+      <ha-card class="table" role="table" aria-rowcount=${rows.length + 1}>
         ${narrow ? nothing : this._renderColumnTitles()}
         ${
           rows.length
@@ -177,7 +177,7 @@ export class AutomationPauseList extends LitElement {
                 </div>
               </div>`
         }
-      </div>
+      </ha-card>
       <automation-pause-menu
         .items=${this._menuItems()}
         .anchor=${this._menuAnchor}
@@ -394,14 +394,12 @@ export class AutomationPauseList extends LitElement {
         padding: 0 16px;
         gap: var(--ha-space-4, 16px);
         box-sizing: border-box;
-        background: var(--primary-background-color);
         border-bottom: 1px solid var(--divider-color);
       }
       .search-toolbar {
         display: flex;
         align-items: center;
         padding: 8px 16px;
-        background: var(--primary-background-color);
       }
       .chip-row {
         display: flex;
@@ -410,7 +408,6 @@ export class AutomationPauseList extends LitElement {
         min-height: 56px;
         padding: 0 16px;
         box-sizing: border-box;
-        background: var(--primary-background-color);
         border-bottom: 1px solid var(--divider-color);
       }
       .flex {
@@ -492,12 +489,11 @@ export class AutomationPauseList extends LitElement {
         pointer-events: none;
       }
 
-      /* ha-data-table */
+      /* ha-card is the surface that themes style, also through card-mod,
+         so the list looks like the other cards in the dashboard. */
       .table {
-        background-color: var(
-          --data-table-background-color,
-          var(--card-background-color)
-        );
+        display: block;
+        overflow: hidden;
       }
       /* ha-data-table draws a line between rows, not above the first one. */
       .table > automation-pause-row:first-of-type {

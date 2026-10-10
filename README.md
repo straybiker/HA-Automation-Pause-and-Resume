@@ -47,6 +47,8 @@ To turn the automation on before the end, use **Resume now** or the normal switc
 
 The list remembers its sort and filter in each browser, as Settings → Automations does. The search starts empty.
 
+The card follows the dashboard theme, also themes that style cards through card-mod, such as Frosted Glass.
+
 The card `custom:automation-pause-card` also works in any other dashboard:
 
 ```yaml

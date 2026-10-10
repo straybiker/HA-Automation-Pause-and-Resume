@@ -343,9 +343,9 @@ export class AutomationPauseCard extends LitElement {
     iconStyles,
     alertStyles,
     css`
+      /* No background of its own: the view shows the theme's background. */
       :host {
         display: block;
-        background-color: var(--primary-background-color);
       }
       .alert {
         margin: 8px 16px;
