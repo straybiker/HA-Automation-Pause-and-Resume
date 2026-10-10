@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automation Pause demo</title>
+<!--
+  The README screenshot. It renders the built card with made-up automations,
+  so no real names reach the public repository. scripts/screenshot/capture.ps1
+  serves the repository and saves the picture.
+-->
+<style>
+  /* Home Assistant's default light theme, the variables the card reads. */
+  :root {
+    --primary-color: #009ac7;
+    --rgb-primary-color: 0, 154, 199;
+    --primary-background-color: #fafafa;
+    --secondary-background-color: #e5e5e5;
+    --card-background-color: #ffffff;
+    --primary-text-color: #212121;
+    --rgb-primary-text-color: 33, 33, 33;
+    --secondary-text-color: #727272;
+    --text-primary-color: #ffffff;
+    --disabled-color: #bdbdbd;
+    --divider-color: rgba(0, 0, 0, 0.12);
+    --outline-color: rgba(0, 0, 0, 0.12);
+    --error-color: #db4437;
+    --warning-color: #ffa600;
+    --success-color: #43a047;
+    --state-icon-color: #44739e;
+    --ha-font-family-body: Roboto, "Segoe UI", system-ui, sans-serif;
+  }
+  html, body {
+    margin: 0;
+    background: var(--primary-background-color);
+    font-family: var(--ha-font-family-body);
+  }
+  main {
+    padding: 8px 0;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  /* ?view=dashboard: the supplied dashboard, a panel view under its title. */
+  header {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    padding: 0 24px;
+    font-size: 20px;
+    color: var(--primary-text-color);
+    border-bottom: 1px solid var(--divider-color);
+  }
+  /* ?view=card: the card in a column of another dashboard. */
+  body.card main {
+    width: 480px;
+    padding: 16px 0;
+  }
+  body.card h2 {
+    margin: 4px 24px 12px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--primary-text-color);
+  }
+</style>
+</head>
+<body>
+<header hidden>Automation Pause and Resume</header>
+<main id="main"><h2 hidden>Automations</h2></main>
+<script type="module">
+  // A stand-in for Home Assistant's ha-card with its default look. It styles
+  // itself, as page CSS does not reach into the card's shadow DOM.
+  customElements.define(
+    "ha-card",
+    class extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: "open" }).innerHTML = `<style>
+          :host {
+            display: block;
+            margin: 0 16px;
+            background: var(--ha-card-background, var(--card-background-color));
+            border: 1px solid var(--ha-card-border-color, var(--divider-color));
+            border-radius: var(--ha-card-border-radius, 12px);
+          }
+        </style><slot></slot>`;
+      }
+    }
+  );
+
+  const now = Date.now();
+  const ago = (minutes) => new Date(now - minutes * 60000).toISOString();
+  const ahead = (minutes) => new Date(now + minutes * 60000).toISOString();
+
+  const automations = [
+    ["hallway_motion_lights", "Hallway motion lights", "hallway", "on", ago(4)],
+    ["doorbell_notification", "Doorbell notification", "hallway", "on", ago(95)],
+    ["morning_blinds", "Morning blinds", "living_room", "on", ago(160)],
+    ["guest_room_heating", "Guest room heating", "guest_room", "off", ago(600), [ago(20), ahead(180)]],
+    ["robot_vacuum_when_away", "Robot vacuum when away", "living_room", "on", ago(1400)],
+    ["night_mode", "Night mode", null, "on", ago(1500)],
+    ["garden_watering", "Garden watering", "garden", "off", ago(2900), [ago(120), ahead(2 * 1440 + 300)]],
+    ["low_battery_alert", "Low battery alert", null, "on", ago(9000)],
+    ["christmas_lights", "Christmas lights", "outside", "off", ago(300000)],
+  ];
+  const areas = {
+    hallway: "Hallway",
+    living_room: "Living room",
+    guest_room: "Guest room",
+    garden: "Garden",
+    outside: "Outside",
+  };
+  const sensor = "sensor.automation_pause_and_resume_paused_automations";
+
+  const states = {};
+  const entities = {};
+  const paused = [];
+  for (const [id, name, area, state, last, pause] of automations) {
+    const entityId = `automation.${id}`;
+    states[entityId] = {
+      entity_id: entityId,
+      state,
+      attributes: { id, friendly_name: name, last_triggered: last },
+    };
+    entities[entityId] = { entity_id: entityId, area_id: area, platform: "automation" };
+    if (pause) {
+      paused.push({ entity_id: entityId, paused_at: pause[0], resume_at: pause[1] });
+    }
+  }
+  states[sensor] = {
+    entity_id: sensor,
+    state: String(paused.length),
+    attributes: { paused, durations: [15, 60, 1440, 10080] },
+  };
+  entities[sensor] = { entity_id: sensor, platform: "automation_pause" };
+
+  const hass = {
+    states,
+    entities,
+    devices: {},
+    areas: Object.fromEntries(
+      Object.entries(areas).map(([area_id, name]) => [area_id, { area_id, name }])
+    ),
+    language: "en",
+    locale: { language: "en", time_format: "24", time_zone: "local" },
+    config: { time_zone: "Europe/Brussels" },
+    callService: async () => undefined,
+  };
+
+  await import("../../custom_components/automation_pause/frontend/automation-pause-card.js");
+  const view = new URLSearchParams(location.search).get("view") ?? "dashboard";
+  document.body.classList.add(view);
+  document.querySelector(view === "card" ? "h2" : "header").hidden = false;
+
+  const card = document.createElement("automation-pause-card");
+  card.setConfig({ type: "custom:automation-pause-card" });
+  card.hass = hass;
+  document.getElementById("main").append(card);
+  await card.updateComplete;
+  document.body.dataset.ready = "true";
+</script>
+</body>
+</html>

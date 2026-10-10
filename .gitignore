@@ -175,3 +175,6 @@ build/
 # Frontend build
 node_modules/
 frontend-src/coverage/
+
+# Local preview servers of the Claude desktop app
+.claude/launch.json

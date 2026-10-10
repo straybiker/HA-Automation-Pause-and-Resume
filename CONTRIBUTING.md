@@ -69,7 +69,17 @@ npm run build
 
 `npm run build` writes `automation-pause-card.js` and `automation-pause-loader.js` in `custom_components/automation_pause/frontend/`. The frontend imports the loader; the loader imports the card and writes a load failure to the Home Assistant log. Commit both files with the source change: HACS installs it as it is. CI fails when the committed file differs from a fresh build.
 
-The card copies the look of Settings → Automations with Home Assistant's CSS variables. It does not use Home Assistant's internal `ha-*` elements, except `ha-icon` for an automation's own icon (with the robot as fallback).
+The card copies the look of Settings → Automations with Home Assistant's CSS variables. It does not use Home Assistant's internal `ha-*` elements, with two exceptions: `ha-icon` for an automation's own icon (with the robot as fallback), and `ha-card` around the list, so dashboard themes and card-mod style it.
+
+### Screenshots
+
+The README pictures come from `scripts/screenshot/demo.html`: the built card with made-up automations, so no real names reach the repository. After a change to the look, run `npm run build`, then:
+
+```powershell
+.\scripts\screenshot\capture.ps1
+```
+
+It writes `docs/images/dashboard.png` and `card.png` with headless Chrome (or Edge).
 
 ## Rules
 

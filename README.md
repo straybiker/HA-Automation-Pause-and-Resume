@@ -41,15 +41,26 @@ Home Assistant 2026.9 or later.
 
 ## Use
 
-Open the dashboard. Click an automation, or use **Pause…** in its ⋮ menu, and pick a duration. A paused automation shows "Resumes in …" instead of its switch. Its ⋮ menu has **Resume now** and **Extend…**.
+Use the dashboard that the integration adds, or add the card to a dashboard of your own. Both work the same way:
 
-To turn the automation on before the end, use **Resume now** or the normal switch. A manual turn-on ends the pause.
+- Click an automation, or use **Pause…** in its ⋮ menu, and pick a duration. A paused automation shows "Resumes in …" instead of its switch. Its ⋮ menu has **Resume now** and **Extend…**.
+- To turn the automation on before the end, use **Resume now** or the normal switch. A manual turn-on ends the pause.
+- The list remembers its sort and filter in each browser, as Settings → Automations does. The search starts empty.
+- The card follows the dashboard theme, also themes that style cards through card-mod, such as Frosted Glass.
 
-The list remembers its sort and filter in each browser, as Settings → Automations does. The search starts empty.
+### The supplied dashboard
 
-The card follows the dashboard theme, also themes that style cards through card-mod, such as Frosted Glass.
+The integration adds the dashboard **Automation Pause and Resume** to the sidebar. It shows all automations, as Settings → Automations does. Turn it off, rename it or make it admin only under [Options](#options).
 
-The card `custom:automation-pause-card` also works in any other dashboard:
+![The supplied dashboard: all automations in a list, two of them paused with the time until they resume](docs/images/dashboard.png)
+
+### The card in another dashboard
+
+Edit a dashboard → **Add card** → search for **Automation Pause**. In a narrow column the card shows a compact list.
+
+<img src="docs/images/card.png" width="400" alt="The card in a dashboard column: a compact list of automations, two of them paused">
+
+Or add it in YAML:
 
 ```yaml
 type: custom:automation-pause-card
