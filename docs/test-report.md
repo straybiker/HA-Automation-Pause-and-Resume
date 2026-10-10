@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| Integration version | 0.1.0-beta.3 |
-| Commit | `26a688d` on `main` |
+| Integration version | 0.1.0-beta.4 |
+| Commit | `3aa112b` on `main` |
 | Date | 10/10/2026 |
 | Results | local Docker run |
 | Supported Home Assistant | 2026.9.0 or later |
@@ -20,7 +20,7 @@ The same report as a page: [test-report.html](test-report.html). GitHub shows th
 |---|--:|--:|--:|---|---|
 | pytest, newest Home Assistant 2026.10.0 | 158 | 0 | 0 | ✅ pass | requirements-dev.txt: 96 Home Assistant tests, 62 static tests |
 | pytest, oldest supported Home Assistant 2026.9.4 | 158 | 0 | 0 | ✅ pass | requirements-dev-oldest.txt: 96 Home Assistant tests, 62 static tests |
-| Card: vitest | 49 | 0 | 0 | ✅ pass | Node v24.11.1 |
+| Card: vitest | 52 | 0 | 0 | ✅ pass | Node v24.11.1 |
 | Card: typecheck (tsc) | – | – | – | ✅ pass | no type errors |
 | Card: eslint and prettier | – | – | – | ✅ pass | eslint: no problems; prettier: all files formatted |
 | Card: bundle equals a fresh build | – | – | – | ✅ pass | the committed bundle equals a fresh build |
@@ -34,7 +34,7 @@ pytest runs the same suite twice: with the newest Home Assistant (`requirements-
 
 ## Live verification
 
-No live run for 0.1.0-beta.3 yet. This is the newest run, for release 0.1.0-beta.2.
+No live run for 0.1.0-beta.4 yet. This is the newest run, for release 0.1.0-beta.2.
 
 By hand on a live Home Assistant, with the steps in [PLAN.md](PLAN.md#verification-live-ha). The data is in `docs/live-verification.json`.
 
@@ -194,7 +194,7 @@ Release **0.1.0-beta.2** · Home Assistant 2026.9.1 · 10/10/2026 · 3 pass, 6 o
 
 | Test | Case | Newest (2026.10.0) | Oldest (2026.9.4) |
 |---|---|---|---|
-| Card url carries the version. | – | ✅ pass | ✅ pass |
+| The frontend imports the loader with the version.<br>*The loader imports the card; the card is not a module of its own.* | – | ✅ pass | ✅ pass |
 | The card is served. | – | ✅ pass | ✅ pass |
 | A missing bundle does not stop the setup. | – | ✅ pass | ✅ pass |
 | A second registration is ignored. | – | ✅ pass | ✅ pass |
@@ -310,6 +310,14 @@ Release **0.1.0-beta.2** · Home Assistant 2026.9.1 · 10/10/2026 · 3 pass, 6 o
 | Area | Test | Result |
 |---|---|---|
 | event names | Prefixes every internal event. | ✅ pass |
+
+### `frontend-src/test/loader.test.ts`
+
+| Area | Test | Result |
+|---|---|---|
+| loader | Loads the card next to it with the same version. | ✅ pass |
+| loader | Names the error, its first stack lines and the browser. | ✅ pass |
+| loader | Handles a value that is not an Error. | ✅ pass |
 
 ### `frontend-src/test/logic.test.ts`
 
