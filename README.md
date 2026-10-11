@@ -55,13 +55,13 @@ Use the dashboard that the integration adds, or add the card to a dashboard of y
 
 The integration adds the dashboard **Automation Pause and Resume** to the sidebar. It shows all automations, as Settings → Automations does. Turn it off, rename it or make it admin only under [Options](#options).
 
-![The supplied dashboard: all automations in a list, two of them paused with the time until they resume](docs/images/dashboard.png)
+![The supplied dashboard: all automations in a list, two of them paused with the time until they resume](https://raw.githubusercontent.com/straybiker/HA-Automation-Pause-and-Resume/main/docs/images/dashboard.png)
 
 ### The card in another dashboard
 
 Edit a dashboard → **Add card** → search for **Automation Pause**. In a narrow column the card shows a compact list.
 
-<img src="docs/images/card.png" width="400" alt="The card in a dashboard column: a compact list of automations, two of them paused">
+<img src="https://raw.githubusercontent.com/straybiker/HA-Automation-Pause-and-Resume/main/docs/images/card.png" width="400" alt="The card in a dashboard column: a compact list of automations, two of them paused">
 
 Or add it in YAML:
 
